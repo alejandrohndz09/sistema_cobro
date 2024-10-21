@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 	})->name('inicio');
 
 	//Pantalla activos
-	Route::resource('activos', 'App\Http\Controllers\ActivoController');
+	Route::get('activos', 'App\Http\Controllers\ActivoController@index');
 	Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
 	Route::get('/obtener-bienes/{activo}', 'App\Http\Controllers\ActivoController@getBienes');
 	Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');

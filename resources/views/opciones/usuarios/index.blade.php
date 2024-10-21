@@ -131,5 +131,5 @@
 
         </div>
     </div>
-    @include('activos.categorias.modales')
+    @include('opciones.usuarios.modales')
 @endsection
