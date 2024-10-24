@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use Illuminate\Http\Request;
 
 class EmpresaController extends Controller
@@ -11,7 +12,11 @@ class EmpresaController extends Controller
      */
     public function index()
     {
-        return view('opciones.empresa.index');
+        // Obtener todos los registros de la tabla empresa
+        $empresas = Empresa::all();
+
+        // Pasar los datos a la vista
+        return view('opciones.empresa.index', compact('empresas'));
     }
 
     /**
