@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Bien
@@ -56,4 +57,18 @@ class Bien extends Model
 	{
 		return $this->belongsTo(Activo::class, 'idActivo');
 	}
+	public function obtenerValorEnLibros()
+    {
+        $resultados = DB::select("CALL ObtenerDepreciacion(?, NULL, NULL, NULL,NULL, ?)", [
+            'diaria',
+			$this->idBien
+        ]);
+
+        // Filtrar solo la columna `valor_en_libros`
+        $valoresEnLibros = array_map(function ($row) {
+            return $row->valor_en_libros;
+        }, $resultados);
+
+        return $valoresEnLibros;
+    }
 }
