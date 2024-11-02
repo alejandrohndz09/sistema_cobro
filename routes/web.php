@@ -29,19 +29,26 @@ use Illuminate\Support\Facades\Route;
 		return view('dashboard');
 	})->name('inicio');
 
-	//Pantalla activos
-	Route::get('activos', 'App\Http\Controllers\ActivoController@index');
-	Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
-	Route::get('/obtener-bienes/{activo}', 'App\Http\Controllers\ActivoController@getBienes');
-	Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');
-    Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
-    
 	//Pantalla categorias
-	//Route::resource('/activos/categorias', 'App\Http\Controllers\CategoriaController');
-	Route::get('/activos/categorias', 'App\Http\Controllers\CategoriaController@index');
+	Route::resource('/activos/categorias', 'App\Http\Controllers\CategoriaController');
 	Route::get('/obtener-categorias', 'App\Http\Controllers\CategoriaController@getCategorias');
     Route::get('/activos/categorias/baja/{id}', 'App\Http\Controllers\CategoriaController@baja');
     Route::get('/activos/categorias/alta/{id}', 'App\Http\Controllers\CategoriaController@alta');
+
+	//Pantalla bienes
+	Route::resource('/activos/{idActivo}/bienes', 'App\Http\Controllers\BienController');
+	Route::get('/activos/{idActivo}/obtener-bienes', 'App\Http\Controllers\BienController@getBienes');
+    Route::get('/activos/{idActivo}/bienes/baja/{id}', 'App\Http\Controllers\BienController@baja');
+    Route::get('/activos/{idActivo}/bienes/alta/{id}', 'App\Http\Controllers\BienController@alta');
+
+	//Pantalla activos
+	Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
+	Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');
+    Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
+	Route::get('/activos/obtener-categorias', 'App\Http\Controllers\ActivoController@getCategorias');
+	Route::get('/activos/obtener-sucursales', 'App\Http\Controllers\ActivoController@getSucursales');
+	Route::get('/activos/obtener-departamentos/{idSucursal}', 'App\Http\Controllers\ActivoController@getDepartamentos');
+    Route::resource('/activos', 'App\Http\Controllers\ActivoController');
 
 	Route::get('opciones', function () {
 		return view('opciones.index');
