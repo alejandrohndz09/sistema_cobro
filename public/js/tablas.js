@@ -16,6 +16,10 @@ function displayData(data) {
   for (let i = startIndex; i < endIndex && i < data.length; i++) {
     tableBody.appendChild(data[i]);
   }
+  instanciarTooltips();
+}
+
+function instanciarTooltips() {
   tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-tt="tooltip"]'))
   tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
