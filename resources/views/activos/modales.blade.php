@@ -1,7 +1,7 @@
 <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-body p-0 " >
+            <div class="modal-body p-0 ">
                 <div class="card card-plain">
                     <div class="card-header pb-0 text-left">
                         <h3 class="font-weight-bolder text-info text-gradient">
@@ -108,8 +108,8 @@
                                 <div class="col-xl-4">
                                     <label>Precio de Adquisición ($): *</label>
                                     <div class="input-group mb-3">
-                                        <input type="number" name="precioAdquisiscion" id="precioAdquisiscion" class="form-control"
-                                            min="1" step="0.01" placeholder="0.00"
+                                        <input type="number" name="precioAdquisiscion" id="precioAdquisiscion"
+                                            class="form-control" min="1" step="0.01" placeholder="0.00"
                                             value="{{ isset($activo) ? old('precioAdquisiscion', $activo->precioAdquisiscion) : old('precioAdquisiscion', '0.00') }}"
                                             autocomplete="off">
                                     </div>
@@ -133,16 +133,15 @@
                                 <div class="table-responsive px-5">
                                     <table class="table align-items-center mb-0">
                                         <thead>
-                                                <th class="text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Código
-                                                </th>
-                                                <th class="text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Departamento
-                                                </th>
-                                                <th
-                                                    class="text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Cantidad a asignar
-                                                </th>
+                                            <th class="text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Código
+                                            </th>
+                                            <th class="text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Departamento
+                                            </th>
+                                            <th class="text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Cantidad a asignar
+                                            </th>
                                             </tr>
                                         </thead>
                                         <tbody id="tableBody">
@@ -150,7 +149,7 @@
                                                 <td class="ps-4">
                                                     <p class="text-xs font-weight-bold mb-0">DP0001</p>
                                                 </td>
-                                               
+
                                                 <td class="ps-4">
                                                     <p class="text-xs font-weight-bold mb-0">Ventas</p>
                                                 </td>
@@ -159,13 +158,13 @@
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </td>
-                                               
+
                                             </tr>
                                             <tr>
                                                 <td class="ps-4">
                                                     <p class="text-xs font-weight-bold mb-0">DP0002</p>
                                                 </td>
-                                               
+
                                                 <td class="ps-4">
                                                     <p class="text-xs font-weight-bold mb-0">Marketing</p>
                                                 </td>
@@ -174,13 +173,13 @@
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </td>
-                                               
+
                                             </tr>
                                             <tr>
                                                 <td class="ps-4">
                                                     <p class="text-xs font-weight-bold mb-0">DP0003</p>
                                                 </td>
-                                               
+
                                                 <td class="ps-4">
                                                     <p class="text-xs font-weight-bold mb-0">Administrativo</p>
                                                 </td>
@@ -189,7 +188,7 @@
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </td>
-                                               
+
                                             </tr>
                                         </tbody>
                                     </table>
@@ -204,6 +203,70 @@
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para ingresar datos para generar el PDF -->
+<div class="modal fade" id="PDFmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Datos para PDF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form id="pdfForm">
+                        <!-- Removemos el action ya que lo haremos mediante AJAX -->
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="empresa">Empresa: </label>
+                                <select name="empresa" id="empresa" class="form-control">
+                                    <option value="">Seleccione empresa</option>
+                                    @foreach ($empresas as $e)
+                                        <option value="{{ $e->idEmpresa }}">{{ $e->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <label for="sucursal">Sucursal: </label>
+                                <select name="sucursal" id="sucursal" class="form-control">
+                                    <option value="">Seleccione sucursal</option>
+                                    @foreach ($sucursales as $sucursal)
+                                        <option value="{{ $sucursal->idSucursal }}">{{ $sucursal->ubicacion }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <label for="departamento">Departamento: </label>
+                                <select name="departamento" id="departamento" class="form-control">
+                                    <option value="">Seleccione departamento</option>
+                                    @foreach ($departamentos as $depto)
+                                        <option value="{{ $depto->idDepartamento }}">{{ $depto->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <label for="activo">Activo: </label>
+                                <select name="activo" id="activo" class="form-control">
+                                    <option value="">Seleccione activo</option>
+                                    @foreach ($activos as $a)
+                                        <option value="{{ $a->idActivo }}">{{ $a->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <input type="hidden" name="tipo" id="tipo" value="">
+                            <!-- Campo oculto para el tipo de depreciación -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bg-gradient-default" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn bg-gradient-primary" onclick="submitForm()">Generar PDF</button>
             </div>
         </div>
     </div>
