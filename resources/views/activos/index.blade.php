@@ -296,20 +296,24 @@
 
             <div class="col-lg-3">
                 <div class="row mx-1">
-                    <a href="{{url('/activos/categorias')}}" class="btn bg-white text text-transform-none border-radius-lg">
+                    <a href="{{ url('/activos/categorias') }}"
+                        class="btn bg-white text text-transform-none border-radius-lg">
                         <i class="fas fa-tags me-2"></i>
                         <span style="text-transform: none">Gestión de categorías</span>
                     </a>
                 </div>
+
                 <div class="row mx-1 dropdown">
-                    <a href="" class="btn bg-gradient-dark dropdown-toggle text text-transform-none border-radius-lg"
+                    <a href=""
+                        class="btn bg-gradient-dark dropdown-toggle text text-transform-none border-radius-lg"
                         data-bs-toggle="dropdown" id="navbarDropdownMenuLink2">
                         <i class="fas fa-file-contract me-2"></i>
                         <span style="text-transform: none">Informes de depreciación</span>
                     </a>
                     <ul class="dropdown-menu w-100" aria-labelledby="navbarDropdownMenuLink2">
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
+                                onclick="setDepreciationType('anual')">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Anual
@@ -317,7 +321,8 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
+                                onclick="setDepreciationType('mensual')">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Mensual
@@ -325,7 +330,8 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
+                                onclick="setDepreciationType('diaria')">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Diaria
@@ -334,7 +340,7 @@
                         </li>
                     </ul>
                 </div>
-               
+
                 <div class="card">
                     <div class="card-header pb-0 p-3">
                         <div class="row d-flex align-items-center">
