@@ -89,7 +89,13 @@
                                             <th class="text-dark text-xs font-weight-bolder ">
                                                 Departamento: *
                                             </th>
-                                            <th></th>
+                                            <th class="px-0">
+                                                <button data-bs-tt="tooltip" id="btnAgregarAd"
+                                                    data-bs-original-title="Añadir lote de adquisición."
+                                                    class="btn btn-sm bg-gradient-dark mb-0">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </th>
                                         </thead>
                                         <tbody id="tableBodyDepartamentos">
                                             <tr>
@@ -109,7 +115,6 @@
                                                     <span id="error-sucursal.1"
                                                         class="sp-sucursal text-danger text-xs mb-3"></span>
                                                 </td>
-
                                                 <td class="ps-4 col-4">
                                                     <select id="departamento" name="departamento[]"
                                                         class="form-control selectDepartamento"
@@ -119,13 +124,7 @@
                                                     <span id="error-departamento.1"
                                                         class="sp-departamento text-danger text-xs mb-3"></span>
                                                 </td>
-
-                                                <td class="ps-0 col-4">
-                                                    <a role="button" data-bs-tt="tooltip"
-                                                        data-bs-original-title="Añadir" class="btnAgregarAd me-2">
-                                                        <i class="fas fa-plus text-secondary"></i>
-                                                    </a>
-                                                </td>
+                                                <td class="ps-0 col-4"></td>
                                             </tr>
                                         </tbody>
                                     </table>

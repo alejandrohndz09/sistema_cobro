@@ -38,8 +38,8 @@ use Illuminate\Support\Facades\Route;
 	//Pantalla bienes
 	Route::resource('/activos/{idActivo}/bienes', 'App\Http\Controllers\BienController');
 	Route::get('/activos/{idActivo}/obtener-bienes', 'App\Http\Controllers\BienController@getBienes');
-    Route::get('/activos/{idActivo}/bienes/baja/{id}', 'App\Http\Controllers\BienController@baja');
-    Route::get('/activos/{idActivo}/bienes/alta/{id}', 'App\Http\Controllers\BienController@alta');
+    Route::post('/activos/bienes/baja/{id}', 'App\Http\Controllers\BienController@baja');
+    Route::get('/activos/bienes/alta/{id}', 'App\Http\Controllers\BienController@alta');
 
 	//Pantalla activos
 	Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');

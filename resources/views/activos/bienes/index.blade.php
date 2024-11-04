@@ -33,11 +33,14 @@
                                         @endphp
                                         <p class="mb-0 mt-0 text-bold"><i class="fas fa-tag text-xs"></i>
                                             {{ $activo->categoria->nombre }}
-                                            <span class="text-xs">({{ $vida_util>1?"{$vida_util} años ":"{$vida_util} año " }}de vida útil).</span>
+                                            <span
+                                                class="text-xs">({{ $vida_util > 1 ? "{$vida_util} años " : "{$vida_util} año " }}de
+                                                vida útil).</span>
                                         </p>
 
                                         <p class="mb-1 mt-0 "><i class="fas fa-cubes text-xs"></i>
-                                            {{ $activo->bienes->count()>1? "{$activo->bienes->count()} Bienes registrados.":"{$activo->bienes->count()} Bien registrado." }}</p>
+                                            {{ $activo->bienes->count() > 1 ? "{$activo->bienes->count()} Bienes registrados." : "{$activo->bienes->count()} Bien registrado." }}
+                                        </p>
                                         <p class="mb-1 mt-0 text-sm"><i class="fas fa-info-circle text-xs"></i> Descripción:
                                         </p>
                                         <div class=" text-xs" style="font-size: 12px !important;">
@@ -150,7 +153,10 @@
                                                 <td>
                                                     <div class="d-flex-column align-items-center justify-content-center">
                                                         @php
-                                                            $v =$b->obtenerValorEnLibros()[0] >= 0? $b->obtenerValorEnLibros()[0]: 0;
+                                                            $v =
+                                                                $b->obtenerValorEnLibros()[0] >= 0
+                                                                    ? $b->obtenerValorEnLibros()[0]
+                                                                    : 0;
                                                             $val = $b->precio > 0 ? ($v / $b->precio) * 100 : 0; // Evita la división por cero
                                                             $señal =
                                                                 $val >= 70
@@ -175,8 +181,8 @@
                                                 </td>
                                                 <td class="px-1 text-xs">
                                                     <span
-                                                        class="badge badge-xs opacity-7 bg-{{ $b->estado == 1 ? 'success' : 'secondary' }} ">
-                                                        {{ $b->estado == 1 ? 'activo' : 'inactivo' }}</span>
+                                                        class="badge badge-xs opacity-7 bg-{{ $b->estado == 1 ? 'success' : ($b->estado == 2 ? 'dark' : ($b->estado == 3 ? 'info' : 'danger')) }} ">
+                                                        {{ $b->estado == 1 ? 'Activo' : ($b->estado == 2 ? 'Vendido' : ($b->estado == 3 ? 'Donado' : 'Desecho')) }}</span>
                                                 </td>
                                                 <td>
                                                     @if ($b->estado == 1)
