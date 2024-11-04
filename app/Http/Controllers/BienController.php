@@ -8,38 +8,20 @@ use App\Models\Bien;
 
 class BienController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store($idActivo, Request $request)
     {
         // Validar la solicitud
         $request->validate([
             'fechaAdquisicion' => 'required|date|before_or_equal:today',
             'precioAdquisicion' => 'required|numeric|min:0.01',
-            'sucursal.*' => 'required',
-            'departamento.*' => 'required',
+            'sucursales.*' => 'required',
+            'departamentos.*' => 'required',
             'cantidad.*' => 'required|numeric|min:1',
         ], [
             'fechaAdquisicion.before_or_equal' => 'La fecha ingresada no debe ser mayor a la de ahora.',
-            'sucursal.*.required' => 'Seleccione una sucursal.',
-            'departamento.*.required' => 'Seleccione un departamento.',
+            'sucursales.*.required' => 'Seleccione una sucursal.',
+            'departamentos.*.required' => 'Seleccione un departamento.',
             'cantidad.*.required' => 'Ingrese una cantidad.',
         ]);
 
@@ -47,7 +29,7 @@ class BienController extends Controller
         try {
             // Obtener los datos de bienes en lotes
             $cantidadesArray = $request->input('cantidad');
-            $departamentosArray = $request->input('departamento');
+            $departamentosArray = $request->input('departamentos');
 
             // Insertar bienes en lotes
             foreach ($cantidadesArray as $index => $cantidad) {
@@ -79,27 +61,14 @@ class BienController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($idActivo, string $id)
     {
-        $bien = Bien::find($id);
+        $bien = Bien::with(['activo', 'departamento'])->find($id);
         return response()->json($bien);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update($idActivo, Request $request, string $id) {
+    public function update(Request $request, $idActivo, string $id)
+    {
         $request->validate([
             'fechaAdquisicion' => 'required|date|before_or_equal:today',
             'precioAdquisicion' => 'required|numeric|min:0.01',
@@ -110,12 +79,12 @@ class BienController extends Controller
             'sucursal.required' => 'Seleccione una sucursal.',
             'departamento.required' => 'Seleccione un departamento.',
         ]);
-        
+
         $bien = Bien::find($id);
         $bien->fechaAdquisicion = $request->post('fechaAdquisicion');
         $bien->precio = $request->post('precioAdquisicion');
         $bien->idDepartamento = $request->post('departamento');
-     
+
         $bien->save();
 
 
@@ -126,12 +95,49 @@ class BienController extends Controller
         return response()->json($alert);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy( $idActivo, String $id)
     {
-        //
+        $bien = Bien::find($id);
+        $bien->delete();
+        $alert = array(
+            'type' => 'success',
+            'message' => 'El registro se ha eliminado exitosamente'
+        );
+
+        return response()->json($alert);
+    }
+
+    public function baja(Request $request, $id)
+    {
+        $request->validate([
+            'motivo' => 'required|in:Venta,Donación,Desecho',
+        ], [
+            'motivo.required' => 'Seleccione un motivo.',
+        ]);
+
+        $bien = Bien::find($id);
+        $bien->estado = $request->input('motivo') == 'Venta' ? 2
+            : ($request->input('motivo') == 'Donación' ? 3 : 4);
+        $bien->save();
+
+        $alert = array(
+            'type' => 'success',
+            'message' => 'El registro se ha deshabilitado exitosamente'
+        );
+        return response()->json($alert);
+    }
+
+    public function alta($id)
+    {
+        $bien = Bien::find($id);
+        $bien->estado = 1;
+        $bien->save();
+
+        $alert = array(
+            'type' => 'success',
+            'message' => 'El registro se ha restaurado exitosamente'
+        );
+        return response()->json($alert);
     }
 
     public function getBienes($idActivo)
