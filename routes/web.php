@@ -40,6 +40,7 @@ Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
 //Generar PDF
 Route::get('/activos/pdf', 'App\Http\Controllers\ActivoController@pdf');
 
+
 //Pantalla categorias
 Route::resource('/activos/categorias', 'App\Http\Controllers\CategoriaController');
 Route::get('/activos/categorias', 'App\Http\Controllers\CategoriaController@index');
