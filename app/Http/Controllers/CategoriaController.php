@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -99,6 +100,8 @@ class CategoriaController extends Controller
         ], [
             'nombre.unique' => 'Esta categoría ya ha sido ingresada.',
         ]);
+
+        dd($id);
 
         $categoria = Categoria::find($id);
         $categoria->nombre = $request->post('nombre');

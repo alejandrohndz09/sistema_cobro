@@ -6,6 +6,7 @@ use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
+use FontLib\Table\Type\name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
@@ -20,11 +21,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-
-
-    Route::get('/', [HomeController::class, 'home']);
+  Route::get('/', [HomeController::class, 'home']);
 	Route::get('inicio', function () {
 		return view('dashboard');
 	})->name('inicio');
@@ -32,23 +29,25 @@ use Illuminate\Support\Facades\Route;
 	//Pantalla categorias
 	Route::resource('/activos/categorias', 'App\Http\Controllers\CategoriaController');
 	Route::get('/obtener-categorias', 'App\Http\Controllers\CategoriaController@getCategorias');
-    Route::get('/activos/categorias/baja/{id}', 'App\Http\Controllers\CategoriaController@baja');
-    Route::get('/activos/categorias/alta/{id}', 'App\Http\Controllers\CategoriaController@alta');
+  Route::get('/activos/categorias/baja/{id}', 'App\Http\Controllers\CategoriaController@baja');
+  Route::get('/activos/categorias/alta/{id}', 'App\Http\Controllers\CategoriaController@alta');
 
 	//Pantalla bienes
 	Route::resource('/activos/{idActivo}/bienes', 'App\Http\Controllers\BienController');
 	Route::get('/activos/{idActivo}/obtener-bienes', 'App\Http\Controllers\BienController@getBienes');
-    Route::post('/activos/bienes/baja/{id}', 'App\Http\Controllers\BienController@baja');
-    Route::get('/activos/bienes/alta/{id}', 'App\Http\Controllers\BienController@alta');
+  Route::post('/activos/bienes/baja/{id}', 'App\Http\Controllers\BienController@baja');
+  Route::get('/activos/bienes/alta/{id}', 'App\Http\Controllers\BienController@alta');
 
 	//Pantalla activos
 	Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
 	Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');
-    Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
+  Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
 	Route::get('/activos/obtener-categorias', 'App\Http\Controllers\ActivoController@getCategorias');
 	Route::get('/activos/obtener-sucursales', 'App\Http\Controllers\ActivoController@getSucursales');
 	Route::get('/activos/obtener-departamentos/{idSucursal}', 'App\Http\Controllers\ActivoController@getDepartamentos');
-    Route::resource('/activos', 'App\Http\Controllers\ActivoController');
+  Route::resource('/activos', 'App\Http\Controllers\ActivoController');
+//Generar PDF
+Route::get('/activos/pdf', 'App\Http\Controllers\ActivoController@pdf');
 
 	Route::get('opciones', function () {
 		return view('opciones.index');
@@ -116,17 +115,16 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['middleware' => 'guest'], function () {
-    Route::get('/register', [RegisterController::class, 'create']);
-    Route::post('/register', [RegisterController::class, 'store']);
-    Route::get('/login', [SessionsController::class, 'create']);
-    Route::post('/session', [SessionsController::class, 'store']);
+	Route::get('/register', [RegisterController::class, 'create']);
+	Route::post('/register', [RegisterController::class, 'store']);
+	Route::get('/login', [SessionsController::class, 'create']);
+	Route::post('/session', [SessionsController::class, 'store']);
 	Route::get('/login/forgot-password', [ResetController::class, 'create']);
 	Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
 	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
 	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
-
 });
 
 Route::get('/login', function () {
-    return view('session/login-session');
+	return view('session/login-session');
 })->name('login');
