@@ -598,7 +598,7 @@ function submitForm() {
             }
         },
         error: function (xhr, status, error) {
-            console.error(error); // Mostrar error en la consola para depuración
+            console.error(xhr.responseJSON); // Mostrar error en la consola para depuración
             alert('Ocurrió un error al generar el PDF. Por favor, intente nuevamente.');
         }
     });

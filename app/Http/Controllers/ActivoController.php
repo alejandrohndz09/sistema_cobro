@@ -11,7 +11,6 @@ use App\Models\Departamento;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ActivoController extends Controller
 {
@@ -338,7 +337,7 @@ class ActivoController extends Controller
 
         // Preparar la consulta SQL para llamar al procedimiento almacenado
         $results = DB::select(
-            'CALL ObtenerDepreciacion(?, ?, ?, ?, ?)',
+            'CALL ObtenerDepreciacion(?, ?, ?, ?, ?,NULL)',
             [$tipoDepreciacion, $idSucursal, $idDepartamento, $idEmpresa, $idActivo]
         );
 
