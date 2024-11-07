@@ -61,11 +61,16 @@ use Illuminate\Support\Facades\Route;
     Route::get('/opciones/empresa/baja/{id}', 'App\Http\Controllers\EmpresaController@baja');
     Route::get('/opciones/empresa/alta/{id}', 'App\Http\Controllers\EmpresaController@alta');
 
+
 	//Pantalla empleados
 	Route::resource('/opciones/empleados', 'App\Http\Controllers\EmpleadoController');
 	Route::get('/obtener-empleados', 'App\Http\Controllers\EmpleadoController@getEmpleados');
     Route::get('/opciones/empleados/baja/{id}', 'App\Http\Controllers\EmpleadoController@baja');
     Route::get('/opciones/empleados/alta/{id}', 'App\Http\Controllers\EmpleadoController@alta');
+	Route::get('/obtener-departamentos', 'App\Http\Controllers\EmpleadoController@getDepartamentos');
+	
+	
+	
 
 	//Pantalla de usuarios
 	Route::resource('/opciones/usuarios', 'App\Http\Controllers\UsuarioController');
