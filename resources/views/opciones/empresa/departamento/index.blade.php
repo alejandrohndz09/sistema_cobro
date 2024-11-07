@@ -4,7 +4,7 @@
 @endsection
 @section('scripts')
     <script src="{{ asset('js/tablas.js') }}"></script>
-    <script src="{{ asset('js/validaciones/jsEmpleado.js') }}"></script>
+    <script src="{{ asset('js/validaciones/jsDepartamento.js') }}"></script>
 @endsection
 @section('content')
     <div class="container-fluid ">
@@ -41,24 +41,17 @@
 
                                             <th
                                                 class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Código
+                                                ID
                                             </th>
 
-                                            <th
-                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                DUI
-                                            </th>
                                             <th
                                                 class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Nombre
                                             </th>
                                             <th
                                                 class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Cargo
+                                                Ubicación de sucursal
                                             </th>
-                                            <th
-                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Departamento </th>
                                             <th
                                                 class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Estado
@@ -70,7 +63,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
-                                        @foreach ($empleados as $em)
+                                        @foreach ($departamentos as $c)
                                             <tr>
                                                 <td style="width: 9%">
                                                     <div
@@ -78,51 +71,40 @@
                                                         <i class="fas fa-tag opacity-10 text-sm"></i>
                                                     </div>
                                                 </td>
-
                                                 <td class="px-1">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $em->idEmpleado }}</p>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $c->idDepartamento }}</p>
                                                 </td>
                                                 <td class="px-1">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $em->dui }}</p>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $c->nombre }}</p>
                                                 </td>
                                                 <td class="px-1">
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $em->nombres . ' ' . $em->apellidos }}</p>
-                                                </td>
-                                                <td class="px-1">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $em->cargo }}</p>
-                                                </td>
-                                                <td class="px-1">
-                                                    @if ($em->departamento)
-                                                        <p class="text-xs font-weight-bold mb-0">
-                                                            {{ $em->departamento->nombre}}</p>
-                                                    @else
-                                                        <p class="text-xs font-weight-bold mb-0">Sin departamento</p>
-                                                    @endif
+                                                        {{ $c->sucursal->ubicacion }}</p>
+
                                                 </td>
                                                 <td class="px-1 text-sm">
                                                     <span
-                                                        class="badge badge-xs opacity-7 bg-{{ $em->estado == 1 ? 'success' : 'secondary' }} ">
-                                                        {{ $em->estado == 1 ? 'activo' : 'inactivo' }}</span>
+                                                        class="badge badge-xs opacity-7 bg-{{ $c->estado == 1 ? 'success' : 'secondary' }} ">
+                                                        {{ $c->estado == 1 ? 'activo' : 'inactivo' }}</span>
                                                 </td>
 
                                                 <td>
-                                                    @if ($em->estado == 1)
+                                                    @if ($c->estado == 1)
                                                         <a role="button" data-bs-toggle="modal" data-bs-target="#modalForm"
-                                                            data-id="{{ $em->idEmpleado}}" data-bs-tt="tooltip"
+                                                            data-id="{{ $c->idDepartamento }}" data-bs-tt="tooltip"
                                                             data-bs-original-title="Editar" class="btnEditar me-3">
                                                             <i class="fas fa-pen text-secondary"></i>
                                                         </a>
 
                                                         <a role="button" data-bs-toggle="modal"
                                                             data-bs-target="#modalConfirm"
-                                                            data-id="{{ $em->idEmpleado }}" data-bs-tt="tooltip"
+                                                            data-id="{{ $c->idDepartamento }}" data-bs-tt="tooltip"
                                                             data-bs-original-title="Deshabilitar"
                                                             class="btnDeshabilitar me-3">
                                                             <i class="fas fa-minus-circle text-secondary"></i>
                                                         </a>
                                                     @else
-                                                        <a role="button" data-id="{{ $em->idEmpleado }}"
+                                                        <a role="button" data-id="{{ $c->idDepartamento }}"
                                                             data-bs-tt="tooltip" data-bs-original-title="Habilitar"
                                                             class="btnHabilitar me-3">
                                                             <i class="fas fa-arrow-up text-secondary"></i>
@@ -130,13 +112,12 @@
 
                                                         <a role="button" data-bs-toggle="modal"
                                                             data-bs-target="#modalConfirm"
-                                                            data-id="{{ $em->idEmpleado }}" data-bs-tt="tooltip"
+                                                            data-id="{{ $c->idDepartamento }}" data-bs-tt="tooltip"
                                                             data-bs-original-title="Eliminar" class="btnEliminar me-3">
                                                             <i class="fas fa-trash text-secondary"></i>
-                                                        </a>                                               
+                                                        </a>
                                                     @endif
                                                 </td>
-
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -147,7 +128,8 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-    @include('opciones.empleados.modales')
+    @include('opciones.empresa.departamento.modales')
 @endsection

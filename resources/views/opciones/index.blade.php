@@ -81,5 +81,4 @@
             </div>
         </div>
     </div>
-    @include('activos.modales')
 @endsection

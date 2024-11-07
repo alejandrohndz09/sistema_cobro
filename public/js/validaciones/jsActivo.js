@@ -15,7 +15,7 @@ $(document).ready(function () {
             cache: false,
             success: function (response) {
                 // Procesar la respuesta exitosa
-                Toast.fire({
+              Toast.fire({
                     icon: response.type,
                     title: response.message
                 });
@@ -142,7 +142,7 @@ $(document).ready(function () {
     });
 
     // Evento click para el botón de agregar fila
-    $('#tableBodyDepartamentos').on('click', '.btnAgregarAd', function (e) {
+    $('#btnAgregarAd').on('click', function (e) {
         e.preventDefault();
         let camposCompletos = true;
 
@@ -178,7 +178,7 @@ $(document).ready(function () {
         });
 
         if (camposCompletos) {
-            let filaOriginal = $(this).closest('tr');
+            let filaOriginal =  $('#tableBodyDepartamentos tr:last');
             let nuevaFila = filaOriginal.clone();
             let filaIndex = $('#tableBodyDepartamentos tr').length;
             // Limpia los valores de los inputs en la fila clonada
@@ -189,8 +189,6 @@ $(document).ready(function () {
             nuevaFila.find(`#error-departamento\\.${filaIndex}`).attr('id', `error-departamento.${filaIndex + 1}`).text('');
             nuevaFila.find(`#error-cantidad\\.${filaIndex}`).attr('id', `error-cantidad.${filaIndex + 1}`).text('');
 
-            // Remueve el botón de la fila original para moverlo a la última fila
-            filaOriginal.find('.btnAgregarAd').remove();
             // Agrega el botón de eliminar
             if ($('#tableBodyDepartamentos tr').length === 1) {
                 filaOriginal.find('td:last').append('<a role="button" data-bs-tt="tooltip" data-bs-original-title="Eliminar" class="btnEliminarAd me-2"><i class="fas fa-minus text-danger"></i></a>');
@@ -216,17 +214,19 @@ $(document).ready(function () {
 
         // Verifica si queda una sola fila en el tbody
         if ($('#tableBodyDepartamentos tr').length === 1) {
-            // Agrega el botón solo si queda una fila
+            // elimina el botón solo si queda una fila
             const filaActual = $('#tableBodyDepartamentos tr:first');
             filaActual.find('.btnEliminarAd').remove();
-            filaActual.find('.btnAgregarAd').remove();
-            filaActual.find('td:last').append('<a role="button" data-bs-tt="tooltip" data-bs-original-title="Añadir" class="btnAgregarAd me-2"><i class="fas fa-plus text-secondary"></i></a>');
         }
     });
 
     // Evento change para el select de sucursal
     $('#tableBodyDepartamentos').on('change', '.selectSucursal', function () {
-        llenarDepartamentos($(this).val(), $(this).closest('tr').find('.selectDepartamento'))
+        if ($(this).val() != '') {
+            llenarDepartamentos($(this).val(), $(this).closest('tr').find('.selectDepartamento'))
+        } else {
+            $(this).closest('tr').find('.selectDepartamento').val('');
+        }
     });
 
     // Eventos que activan la verificación y habilitación de otros campos
@@ -342,7 +342,7 @@ function agregar() {
     $('#fechaAdquisicion').val(new Date().toISOString().split('T')[0]);
     instanscearTablaAdquisicion();
     $('#panelAdquisicion').show();
-    $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, .btnAgregarAd').prop('disabled', true);
+    $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, #btnAgregarAd').prop('disabled', true);
 
     //otros
     $('#method').val('POST'); // Cambiar a POST
@@ -534,7 +534,7 @@ function instanscearTablaAdquisicion() {
     nuevaFila.find('.sp-cantidad').attr('id', `error-cantidad\.1`).text('');
     $('#tableBodyDepartamentos').append(nuevaFila);
     llenarSucursales(null);
-    $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, .btnAgregarAd').prop('disabled', false);
+    $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, #btnAgregarAd').prop('disabled', false);
     instanciarTooltips();
 }
 
@@ -547,9 +547,59 @@ function verificarCampos() {
     // Verifica si todos los campos tienen valores
     if (nombre && categoria && descripcion && imagen) {
         // Habilita los campos requeridos
-        $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, .btnAgregarAd').prop('disabled', false);
+        $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, #btnAgregarAd').prop('disabled', false);
     } else {
         // Deshabilita los campos si falta algún valor
-        $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, .btnAgregarAd').prop('disabled', true);
+        $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, #btnAgregarAd').prop('disabled', true);
     }
+}
+function setDepreciationType(type) {
+    // Establecer el tipo de depreciación en el campo oculto
+    document.getElementById('tipo').value = type;
+}
+
+// Función para enviar el formulario
+function submitForm() {
+    // Obtener los datos del formulario
+    const formData = {
+        empresa: document.getElementById('empresa').value,
+        sucursal: document.getElementById('sucursal').value,
+        departamento: document.getElementById('departamento').value,
+        activo: document.getElementById('activo').value,
+        tipo: document.getElementById('tipo').value,
+    };
+
+    // Realizar la solicitud AJAX con los datos del formulario
+    $.ajax({
+        url: "/activos/pdf", // URL de la ruta que maneja la generación del PDF
+        type: "GET", // Método HTTP que deseas utilizar
+        data: formData, // Los datos que se van a enviar
+        success: function (response) {
+            // Verificar si hay algún error en la respuesta
+            if (response.type === 'info') {
+                // Procesar la respuesta fallida
+              Toast.fire({
+                    icon: response.type,
+                    title: response.message
+                });
+               } else {
+                // Crear un objeto Blob con el contenido en base64
+                const byteCharacters = atob(response.pdf);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+                // Crear un enlace temporal para abrir el PDF en una nueva pestaña
+                const pdfURL = URL.createObjectURL(blob);
+                window.open(pdfURL, '_blank');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseJSON); // Mostrar error en la consola para depuración
+            alert('Ocurrió un error al generar el PDF. Por favor, intente nuevamente.');
+        }
+    });
 }
