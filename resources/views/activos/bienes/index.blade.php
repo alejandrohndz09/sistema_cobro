@@ -4,72 +4,50 @@
 @endsection
 @section('scripts')
     <script src="{{ asset('js/tablas.js') }}"></script>
-    <script src="{{ asset('js/validaciones/jsActivo.js') }}"></script>
+    <script src="{{ asset('js/validaciones/jsBien.js') }}"></script>
 @endsection
 @section('content')
     <div class="container-fluid ">
         <div class="row">
             <div class="col-lg-9">
-                <div class="row ">
-                    <div class="col-md-3 col-sm-3 mb-4">
-                        <div class="card">
-                            <div class="card-header mx-4 p-3 text-center">
-                                <div class="icon icon-shape icon-lg bg-gradient-dark shadow text-center border-radius-lg">
-                                    <i class="fas fa-building opacity-10"></i>
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-body p-3">
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <div class="bg-white border-radius-lg h-100 position-relative overflow-hidden">
+                                        <img src="../assets/img/activos/{{ $activo->imagen }}"
+                                            style="width: 100%; height: 100%; object-fit: cover;"
+                                            class="position-absolute top-0 start-0">
+                                    </div>
+
                                 </div>
-                            </div>
-                            <div class="card-body pt-0 p-3 text-center">
-                                <h6 class="text-center mb-0">Edificaciones</h6>
-                                <span class="text-xs">Valor estimado:</span>
-                                <hr class="horizontal dark my-1">
-                                <h5 class="mb-0">+$2000</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 mb-4">
-                        <div class="card">
-                            <div class="card-header mx-4 p-3 text-center">
-                                <div class="icon icon-shape icon-lg bg-gradient-info shadow text-center border-radius-lg">
-                                    <i class="fas fa-snowplow opacity-10"></i>
+                                <div class="col-lg-6 ms-auto mt-5 mt-lg-0">
+                                    <div class="d-flex flex-column h-100">
+                                        <h5 class="font-weight-bolder mb-1">{{ $activo->nombre }}</h5>
+                                        @php
+                                            $vida_util =
+                                                $activo->categoria->depreciacion_anual > 0
+                                                    ? 1 / $activo->categoria->depreciacion_anual
+                                                    : 0;
+                                        @endphp
+                                        <p class="mb-0 mt-0 text-bold"><i class="fas fa-tag text-xs"></i>
+                                            {{ $activo->categoria->nombre }}
+                                            <span
+                                                class="text-xs">({{ $vida_util > 1 ? "{$vida_util} años " : "{$vida_util} año " }}de
+                                                vida útil).</span>
+                                        </p>
+
+                                        <p class="mb-1 mt-0 "><i class="fas fa-cubes text-xs"></i>
+                                            {{ $activo->bienes->count() > 1 ? "{$activo->bienes->count()} Bienes registrados." : "{$activo->bienes->count()} Bien registrado." }}
+                                        </p>
+                                        <p class="mb-1 mt-0 text-sm"><i class="fas fa-info-circle text-xs"></i> Descripción:
+                                        </p>
+                                        <div class=" text-xs" style="font-size: 12px !important;">
+                                            {!! \Parsedown::instance()->text($activo->descripcion) !!}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-body pt-0 p-3 text-center">
-                                <h6 class="text-center mb-0">Maquinaria</h6>
-                                <span class="text-xs">Valor estimado:</span>
-                                <hr class="horizontal dark my-1">
-                                <h5 class="mb-0">+$2000</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 mb-4">
-                        <div class="card">
-                            <div class="card-header mx-4 p-3 text-center">
-                                <div
-                                    class="icon icon-shape icon-lg bg-gradient-warning shadow text-center border-radius-lg">
-                                    <i class="fas fa-car opacity-10"></i>
-                                </div>
-                            </div>
-                            <div class="card-body pt-0 p-3 text-center">
-                                <h6 class="text-center mb-0">Vehículos</h6>
-                                <span class="text-xs">Valor estimado:</span>
-                                <hr class="horizontal dark my-1">
-                                <h5 class="mb-0">+$2000</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 mb-4">
-                        <div class="card">
-                            <div class="card-header mx-4 p-3 text-center">
-                                <div
-                                    class="icon icon-shape icon-lg bg-gradient-success shadow text-center border-radius-lg">
-                                    <i class="fas fa-computer opacity-10"></i>
-                                </div>
-                            </div>
-                            <div class="card-body pt-0 p-3 text-center">
-                                <h6 class="text-center mb-0">Otros bienes</h6>
-                                <span class="text-xs">Valor estimado:</span>
-                                <hr class="horizontal dark my-1">
-                                <h5 class="mb-0">$455.00</h5>
                             </div>
                         </div>
                     </div>
@@ -80,7 +58,7 @@
                         <div class="card-header pb-0 p-3">
                             <div class="row">
                                 <div class="col-6 d-flex align-items-center">
-                                    <h4 class="mb-0">Registros</h4>
+                                    <h4 class="mb-0">Registro de Bienes</h4>
                                 </div>
                                 <div class="col-6 d-flex align-items-end justify-content-end">
                                     <div class="input-group" style="width: 60%">
@@ -98,7 +76,7 @@
                         </div>
                         <div class="card-body p-3">
                             <div class="table-responsive p-0">
-                                <table class="table align-items-center mb-0">
+                                <table class="table align-items-center justify-content-center  mb-0">
                                     <thead>
                                         <tr>
                                             <th style="width: 3%">
@@ -109,15 +87,19 @@
                                             </th>
                                             <th
                                                 class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Activo
+                                                Fecha adquis.
                                             </th>
                                             <th
                                                 class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Bienes Reg.
+                                                V. adquisición
                                             </th>
                                             <th
                                                 class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                V. Act. Acum.
+                                                V. actual
+                                            </th>
+                                            <th
+                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                depreciación acum.
                                             </th>
                                             <th
                                                 class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -130,67 +112,101 @@
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
-                                        @foreach ($activos as $a)
-                                            <tr class="tr-link" data-id="{{ $a->idActivo }}">
+                                        @foreach ($activo->bienes as $b)
+                                            <tr class="tr-link" data-id="{{ $b->idBien }}">
                                                 <td>
-
-                                                    @if (isset($a->imagen))
-                                                        <div>
-                                                            <img src="../assets/img/activos/{{ $a->imagen }}"
-                                                                class="avatar avatar-sm me-3">
-                                                        </div>
-                                                    @else
-                                                        <div
-                                                            class="avatar avatar-sm icon bg-gradient-info shadow text-center border-radius-lg">
-                                                            <i class="fas fa-cube opacity-10 text-sm"></i>
-                                                        </div>
-                                                    @endif
-                                                </td>
-                                                <td class="px-1">
-                                                    <p class="text-xs font-bold mb-0">{{ $a->idActivo }}</p>
-                                                </td>
-                                                <td class="px-1">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $a->nombre }}</p>
-                                                    <p class="text-xxs  mb-0">({{ $a->categoria->nombre }})</p>
-                                                </td>
-                                                <td class="px-5">
-                                                    <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $a->bienes->where('estado', 1)->count() }}</p>
+                                                    <div
+                                                        class="avatar avatar-sm icon bg-gradient-info shadow text-center border-radius-lg">
+                                                        <i class="fas fa-cube opacity-10 text-sm"></i>
+                                                    </div>
                                                 </td>
                                                 <td class="px-1">
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ '$' . number_format($a->bienes->sum('precio'), 2, '.', ',') }}
+                                                        {{ $b->departamento->idSucursal . '-' . $b->idDepartamento . '-' . $b->idActivo . '-' . $b->idBien }}
                                                     </p>
+                                                </td>
+                                                <td class="px-1">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $b->fechaAdquisicion->format('d/m/y') }}</p>
+                                                    <p class="text-xxs  mb-0"></p>
+                                                </td>
+                                                <td class="px-1">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ '$' . number_format($b->precio, 2, '.', ',') }}
+                                                    </p>
+                                                </td>
+                                                @php
+                                                    $valor_actual = number_format(
+                                                        $b->obtenerValorEnLibros()[0] >= 0
+                                                            ? $b->obtenerValorEnLibros()[0]
+                                                            : 0,
+                                                        2,
+                                                        '.',
+                                                        ',',
+                                                    );
+                                                @endphp
+                                                <td class="px-1">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ '$' . $valor_actual }}
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex-column align-items-center justify-content-center">
+                                                        @php
+                                                            $v =
+                                                                $b->obtenerValorEnLibros()[0] >= 0
+                                                                    ? $b->obtenerValorEnLibros()[0]
+                                                                    : 0;
+                                                            $val = $b->precio > 0 ? ($v / $b->precio) * 100 : 0; // Evita la división por cero
+                                                            $señal =
+                                                                $val >= 70
+                                                                    ? 'success'
+                                                                    : ($val > 40
+                                                                        ? 'info'
+                                                                        : ($val > 15
+                                                                            ? 'warning'
+                                                                            : 'danger'));
+                                                        @endphp
+                                                        <span
+                                                            class="me-2 text-xs font-weight-bold">{{ number_format(100 - $val, 2, '.', ',') . '%' }}</span>
+                                                        <div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-gradient-{{ $señal }}"
+                                                                    role="progressbar" aria-valuenow="{{ 100 - $val }}"
+                                                                    aria-valuemin="0" aria-valuemax="100"
+                                                                    style="width:{{ 100 - $val }}%;"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                                 <td class="px-1 text-xs">
                                                     <span
-                                                        class="badge badge-xs opacity-7 bg-{{ $a->estado == 1 ? 'success' : 'secondary' }} ">
-                                                        {{ $a->estado == 1 ? 'activo' : 'inactivo' }}</span>
+                                                        class="badge badge-xs opacity-7 bg-{{ $b->estado == 1 ? 'success' : ($b->estado == 2 ? 'dark' : ($b->estado == 3 ? 'info' : 'danger')) }} ">
+                                                        {{ $b->estado == 1 ? 'Activo' : ($b->estado == 2 ? 'Vendido' : ($b->estado == 3 ? 'Donado' : 'Desecho')) }}</span>
                                                 </td>
                                                 <td>
-                                                    @if ($a->estado == 1)
-                                                        <a role="button" data-bs-toggle="modal"
-                                                            data-bs-target="#modalForm" data-id="{{ $a->idActivo }}"
-                                                            data-bs-tt="tooltip" data-bs-original-title="Editar"
-                                                            class="btnEditar me-2">
+                                                    @if ($b->estado == 1)
+                                                        <a role="button" data-bs-toggle="modal" data-bs-target="#modalForm"
+                                                            data-id="{{ $b->idBien }}" data-bs-tt="tooltip"
+                                                            data-bs-original-title="Editar" class="btnEditar me-2">
                                                             <i class="fas fa-pen text-secondary"></i>
                                                         </a>
 
                                                         <a role="button" data-bs-toggle="modal"
-                                                            data-bs-target="#modalConfirm" data-id="{{ $a->idActivo }}"
+                                                            data-bs-target="#modalConfirm" data-id="{{ $b->idBien }}"
                                                             data-bs-tt="tooltip" data-bs-original-title="Deshabilitar"
                                                             class="btnDeshabilitar">
                                                             <i class="fas fa-minus-circle text-secondary"></i>
                                                         </a>
                                                     @else
-                                                        <a role="button" data-id="{{ $a->idActivo }}"
+                                                        <a role="button" data-id="{{ $b->idBien }}"
                                                             data-bs-tt="tooltip" data-bs-original-title="Habilitar"
                                                             class="btnHabilitar me-2">
                                                             <i class="fas fa-arrow-up text-secondary"></i>
                                                         </a>
 
                                                         <a role="button" data-bs-toggle="modal"
-                                                            data-bs-target="#modalConfirm" data-id="{{ $a->idActivo }}"
+                                                            data-bs-target="#modalConfirm" data-id="{{ $b->idBien }}"
                                                             data-bs-tt="tooltip" data-bs-original-title="Eliminar"
                                                             class="btnEliminar">
                                                             <i class="fas fa-trash text-secondary"></i>
@@ -209,14 +225,6 @@
             </div>
 
             <div class="col-lg-3">
-                <div class="row mx-1">
-                    <a href="{{ url('/activos/categorias') }}"
-                        class="btn bg-white text text-transform-none border-radius-lg">
-                        <i class="fas fa-tags me-2"></i>
-                        <span style="text-transform: none">Gestión de categorías</span>
-                    </a>
-                </div>
-
                 <div class="row mx-1 dropdown">
                     <a href=""
                         class="btn bg-gradient-dark dropdown-toggle text text-transform-none border-radius-lg"
@@ -226,8 +234,7 @@
                     </a>
                     <ul class="dropdown-menu w-100" aria-labelledby="navbarDropdownMenuLink2">
                         <li>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
-                                onclick="setDepreciationType('anual')">
+                            <a class="dropdown-item" href="#">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Anual
@@ -235,8 +242,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
-                                onclick="setDepreciationType('mensual')">
+                            <a class="dropdown-item" href="#">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Mensual
@@ -244,8 +250,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
-                                onclick="setDepreciationType('diaria')">
+                            <a class="dropdown-item" href="#">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Diaria
@@ -254,6 +259,7 @@
                         </li>
                     </ul>
                 </div>
+
                 <div class="card">
                     <div class="card-header pb-0 p-3">
                         <div class="row d-flex align-items-center">
@@ -314,5 +320,5 @@
             </div>
         </div>
     </div>
-    @include('activos.modales')
+    @include('activos.bienes.modales')
 @endsection
