@@ -24,86 +24,88 @@ use Illuminate\Support\Facades\Route;
 
 
 
-    Route::get('/', [HomeController::class, 'home']);
-	Route::get('inicio', function () {
-		return view('dashboard');
-	})->name('inicio');
+Route::get('/', [HomeController::class, 'home']);
+Route::get('inicio', function () {
+    return view('dashboard');
+})->name('inicio');
 
-	//Pantalla activos
-	Route::get('activos', 'App\Http\Controllers\ActivoController@index');
-	Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
-	Route::get('/obtener-bienes/{activo}', 'App\Http\Controllers\ActivoController@getBienes');
-	Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');
-    Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
-    
-	//Pantalla categorias
-	//Route::resource('/activos/categorias', 'App\Http\Controllers\CategoriaController');
-	Route::get('/activos/categorias', 'App\Http\Controllers\CategoriaController@index');
-	Route::get('/obtener-categorias', 'App\Http\Controllers\CategoriaController@getCategorias');
-    Route::get('/activos/categorias/baja/{id}', 'App\Http\Controllers\CategoriaController@baja');
-    Route::get('/activos/categorias/alta/{id}', 'App\Http\Controllers\CategoriaController@alta');
+//Pantalla activos
+Route::get('activos', 'App\Http\Controllers\ActivoController@index');
+Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
+Route::get('/obtener-bienes/{activo}', 'App\Http\Controllers\ActivoController@getBienes');
+Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');
+Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
 
-	Route::get('opciones', function () {
-		return view('opciones.index');
-	})->name('opciones');
+//Pantalla categorias
+Route::resource('/activos/categorias', 'App\Http\Controllers\CategoriaController');
+//Route::get('/activos/categorias', 'App\Http\Controllers\CategoriaController@index');
+Route::get('/obtener-categorias', 'App\Http\Controllers\CategoriaController@getCategorias');
+Route::get('/activos/categorias/baja/{id}', 'App\Http\Controllers\CategoriaController@baja');
+Route::get('/activos/categorias/alta/{id}', 'App\Http\Controllers\CategoriaController@alta');
 
-	//Pantalla empresa
-	Route::resource('/opciones/empresa', 'App\Http\Controllers\EmpresaController');
-	Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
-	Route::get('/obtener-sucursales/{empresa}', 'App\Http\Controllers\EmpresaController@getSucursales');
-    Route::get('/opciones/empresa/baja/{id}', 'App\Http\Controllers\EmpresaController@baja');
-    Route::get('/opciones/empresa/alta/{id}', 'App\Http\Controllers\EmpresaController@alta');
+Route::get('opciones', function () {
+    return view('opciones.index');
+})->name('opciones');
 
-	//Pantalla empleados
-	Route::resource('/opciones/empleados', 'App\Http\Controllers\EmpleadoController');
-	Route::get('/obtener-empleados', 'App\Http\Controllers\EmpleadoController@getEmpleados');
-    Route::get('/opciones/empleados/baja/{id}', 'App\Http\Controllers\EmpleadoController@baja');
-    Route::get('/opciones/empleados/alta/{id}', 'App\Http\Controllers\EmpleadoController@alta');
+//Pantalla empresa
+Route::resource('/opciones/empresa', 'App\Http\Controllers\EmpresaController');
+Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
+Route::get('/obtener-sucursales', 'App\Http\Controllers\EmpresaController@getSucursales');
+Route::get('/opciones/empresa/baja/{id}', 'App\Http\Controllers\EmpresaController@bajaSucursal');
+Route::get('/opciones/empresa/alta/{id}', 'App\Http\Controllers\EmpresaController@altaSucursal');
+Route::get('/opciones/empresa/{id}/editEmpresa', 'App\Http\Controllers\EmpresaController@editEmpresa')->name('empresa.edit');
+Route::put('/opciones/empresa/{id}/updateEmpresa', 'App\Http\Controllers\EmpresaController@updateEmpresa')->name('empresa.update');
 
-	//Pantalla de usuarios
-	Route::resource('/opciones/usuarios', 'App\Http\Controllers\UsuarioController');
-	Route::get('/obtener-usuarios', 'App\Http\Controllers\UsuarioController@getUsuarios');
-    Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
-    Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
-	
-	Route::get('billing', function () {
-		return view('billing');
-	})->name('billing');
+//Pantalla empleados
+Route::resource('/opciones/empleados', 'App\Http\Controllers\EmpleadoController');
+Route::get('/obtener-empleados', 'App\Http\Controllers\EmpleadoController@getEmpleados');
+Route::get('/opciones/empleados/baja/{id}', 'App\Http\Controllers\EmpleadoController@baja');
+Route::get('/opciones/empleados/alta/{id}', 'App\Http\Controllers\EmpleadoController@alta');
 
-	Route::get('profile', function () {
-		return view('profile');
-	})->name('profile');
+//Pantalla de usuarios
+Route::resource('/opciones/usuarios', 'App\Http\Controllers\UsuarioController');
+Route::get('/obtener-usuarios', 'App\Http\Controllers\UsuarioController@getUsuarios');
+Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
+Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
 
-	Route::get('rtl', function () {
-		return view('rtl');
-	})->name('rtl');
+Route::get('billing', function () {
+    return view('billing');
+})->name('billing');
 
-	Route::get('user-management', function () {
-		return view('laravel-examples/user-management');
-	})->name('user-management');
+Route::get('profile', function () {
+    return view('profile');
+})->name('profile');
 
-	Route::get('tables', function () {
-		return view('tables');
-	})->name('tables');
+Route::get('rtl', function () {
+    return view('rtl');
+})->name('rtl');
 
-    Route::get('virtual-reality', function () {
-		return view('virtual-reality');
-	})->name('virtual-reality');
+Route::get('user-management', function () {
+    return view('laravel-examples/user-management');
+})->name('user-management');
 
-    Route::get('static-sign-in', function () {
-		return view('static-sign-in');
-	})->name('sign-in');
+Route::get('tables', function () {
+    return view('tables');
+})->name('tables');
 
-    Route::get('static-sign-up', function () {
-		return view('static-sign-up');
-	})->name('sign-up');
+Route::get('virtual-reality', function () {
+    return view('virtual-reality');
+})->name('virtual-reality');
 
-    Route::get('/logout', [SessionsController::class, 'destroy']);
-	Route::get('/user-profile', [InfoUserController::class, 'create']);
-	Route::post('/user-profile', [InfoUserController::class, 'store']);
-    Route::get('/login', function () {
-		return view('dashboard');
-	})->name('sign-up');
+Route::get('static-sign-in', function () {
+    return view('static-sign-in');
+})->name('sign-in');
+
+Route::get('static-sign-up', function () {
+    return view('static-sign-up');
+})->name('sign-up');
+
+Route::get('/logout', [SessionsController::class, 'destroy']);
+Route::get('/user-profile', [InfoUserController::class, 'create']);
+Route::post('/user-profile', [InfoUserController::class, 'store']);
+Route::get('/login', function () {
+    return view('dashboard');
+})->name('sign-up');
 
 
 
@@ -113,11 +115,10 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/register', [RegisterController::class, 'store']);
     Route::get('/login', [SessionsController::class, 'create']);
     Route::post('/session', [SessionsController::class, 'store']);
-	Route::get('/login/forgot-password', [ResetController::class, 'create']);
-	Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
-	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
-	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
-
+    Route::get('/login/forgot-password', [ResetController::class, 'create']);
+    Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
+    Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
+    Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
 });
 
 Route::get('/login', function () {
