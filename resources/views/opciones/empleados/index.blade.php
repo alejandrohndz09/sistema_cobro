@@ -111,8 +111,7 @@
 
                                                         <a role="button" data-bs-toggle="modal"
                                                             data-bs-target="#modalConfirm" data-id="{{ $c->idCategoria }}"
-                                                            data-bs-tt="tooltip"
-                                                            data-bs-original-title="Eliminar"
+                                                            data-bs-tt="tooltip" data-bs-original-title="Eliminar"
                                                             class="btnEliminar me-3">
                                                             <i class="fas fa-trash text-secondary"></i>
                                                         </a>

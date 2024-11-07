@@ -63,9 +63,11 @@ Route::get('/empresa/departamentos/alta/{id}', 'App\Http\Controllers\Departament
 //Pantalla empresa
 Route::resource('/opciones/empresa', 'App\Http\Controllers\EmpresaController');
 Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
-Route::get('/obtener-sucursales/{empresa}', 'App\Http\Controllers\EmpresaController@getSucursales');
-Route::get('/opciones/empresa/baja/{id}', 'App\Http\Controllers\EmpresaController@baja');
-Route::get('/opciones/empresa/alta/{id}', 'App\Http\Controllers\EmpresaController@alta');
+Route::get('/obtener-sucursales', 'App\Http\Controllers\EmpresaController@getSucursales');
+Route::get('/opciones/empresa/baja/{id}', 'App\Http\Controllers\EmpresaController@bajaSucursal');
+Route::get('/opciones/empresa/alta/{id}', 'App\Http\Controllers\EmpresaController@altaSucursal');
+Route::get('/opciones/empresa/{id}/editEmpresa', 'App\Http\Controllers\EmpresaController@editEmpresa')->name('empresa.edit');
+Route::put('/opciones/empresa/{id}/updateEmpresa', 'App\Http\Controllers\EmpresaController@updateEmpresa')->name('empresa.update');
 
 //Pantalla empleados
 Route::resource('/opciones/empleados', 'App\Http\Controllers\EmpleadoController');
@@ -115,11 +117,8 @@ Route::get('/logout', [SessionsController::class, 'destroy']);
 Route::get('/user-profile', [InfoUserController::class, 'create']);
 Route::post('/user-profile', [InfoUserController::class, 'store']);
 Route::get('/login', function () {
-	return view('dashboard');
+  return view('dashboard');
 })->name('sign-up');
-
-
-
 
 Route::group(['middleware' => 'guest'], function () {
 	Route::get('/register', [RegisterController::class, 'create']);
