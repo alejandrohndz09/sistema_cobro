@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
+use App\Http\Controllers\SucursalController;
 use FontLib\Table\Type\name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -63,12 +65,15 @@ Route::group(['middleware' => 'auth'], function () {
 
 	//Pantalla empresa
 	Route::resource('/opciones/empresa', 'App\Http\Controllers\EmpresaController');
-	Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
-	Route::get('/obtener-sucursales', 'App\Http\Controllers\EmpresaController@getSucursales');
-	Route::get('/opciones/empresa/baja/{id}', 'App\Http\Controllers\EmpresaController@bajaSucursal');
-	Route::get('/opciones/empresa/alta/{id}', 'App\Http\Controllers\EmpresaController@altaSucursal');
-	Route::get('/opciones/empresa/{id}/editEmpresa', 'App\Http\Controllers\EmpresaController@editEmpresa')->name('empresa.edit');
-	Route::put('/opciones/empresa/{id}/updateEmpresa', 'App\Http\Controllers\EmpresaController@updateEmpresa')->name('empresa.update');
+  Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
+  Route::get('/opciones/empresa/{id}/editEmpresa', 'App\Http\Controllers\EmpresaController@editEmpresa')->name('empresa.edit');
+  Route::put('/opciones/empresa/{id}/updateEmpresa', 'App\Http\Controllers\EmpresaController@updateEmpresa')->name('empresa.update');
+
+  //Sucursales
+  Route::resource('/opciones/sucursal', 'App\Http\Controllers\SucursalController');
+  Route::get('/obtener-sucursales', 'App\Http\Controllers\SucursalController@getSucursales');
+  Route::get('/opciones/sucursal/baja/{id}', 'App\Http\Controllers\SucursalController@bajaSucursal');
+  Route::get('/opciones/sucursal/alta/{id}', 'App\Http\Controllers\SucursalController@altaSucursal');
 
 	//Pantalla empleados
 	Route::resource('/opciones/empleados', 'App\Http\Controllers\EmpleadoController');
@@ -132,3 +137,4 @@ Route::get('login', function () {
 	return view('usuarios.login');
 })->name('login')->middleware('guest');
 Route::post('/login', 'App\Http\Controllers\LoginController@login');
+
