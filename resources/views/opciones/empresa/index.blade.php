@@ -4,8 +4,8 @@
 @endsection
 @section('scripts')
     <script src="{{ asset('js/tablas.js') }}"></script>
-    <script src="{{ asset('js/validaciones/jsEmpresaE.js') }}"></script>
     <script src="{{ asset('js/validaciones/jsEmpresa.js') }}"></script>
+    <script src="{{ asset('js/validaciones/jsSucursal.js') }}"></script>
 @endsection
 @section('content')
     <div class="container-fluid ">
@@ -15,6 +15,7 @@
                 <div class="col-lg-12 mb-4">
                     <div class="card border-0 shadow">
                         <div class="row g-0 align-items-center">
+
                             <!-- Imagen -->
                             <div class="col-md-4">
                                 <div class="p-4 text-center">
@@ -74,8 +75,9 @@
                                     </div>
                                     <div class="text-end ms-2">
                                         <a id="btnAgregar" class="btn bg-gradient-dark mb-0" href="javascript:;"
-                                            data-bs-toggle="modal" data-bs-target="#modalForm"><i
-                                                class="fas fa-plus"></i>&nbsp;&nbsp;Agregar</a>
+                                            data-bs-toggle="modal" data-bs-target="#modalFormS">
+                                            <i class="fas fa-plus"></i>&nbsp;&nbsp;Agregar
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -143,7 +145,8 @@
                                                 </td>
                                                 <td>
                                                     @if ($sucursal->estado == 1)
-                                                        <a role="button" data-bs-toggle="modal" data-bs-target="#modalForm"
+                                                        <a role="button" data-bs-toggle="modal"
+                                                            data-bs-target="#modalFormS"
                                                             data-id="{{ $sucursal->idSucursal }}" data-bs-tt="tooltip"
                                                             data-bs-original-title="Editar" class="btnEditar me-3">
                                                             <i class="fas fa-pen text-secondary"></i>
@@ -183,7 +186,6 @@
                 </div>
             </div>
         </div>
-
         @include('opciones.empresa.modales')
         @include('opciones.empresa.modalesEmpresa')
     @endsection
