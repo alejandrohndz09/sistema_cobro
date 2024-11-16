@@ -48,7 +48,7 @@
     <!-- CSS Files -->
     @yield('styles')
     <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
-    
+
 </head>
 
 <body style="overflow: visible;"
@@ -85,12 +85,7 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
-
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>   
-    <script>
+     <script>
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -98,10 +93,23 @@
             timer: 3000,
             timerProgressBar: true,
             // iconColor: 'white',
-
-
-        });       
+        });
     </script>
+    @if (session('alert'))
+        <script>
+            Toast.fire({
+                icon: "{{ session('alert')['type'] }}",
+                title: "{{ session('alert')['message'] }}",
+            });
+        </script>
+        @php
+            session()->forget('alert');
+        @endphp
+    @endif
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
     @yield('scripts')
 </body>
 
