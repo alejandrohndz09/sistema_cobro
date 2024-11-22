@@ -11,6 +11,7 @@ use App\Models\Departamento;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ActivoController extends Controller
 {
@@ -132,9 +133,10 @@ class ActivoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         $activo = Activo::find($id);
-        return view('activos.bienes.index')->with('activo',$activo);
+        return view('activos.bienes.index')->with('activo', $activo);
     }
 
     /**
@@ -331,9 +333,11 @@ class ActivoController extends Controller
         $tipoDepreciacion = $request->input('tipo');
         $idEmpresa = $request->input('empresa');
 
-        // Obtener el nombre de la empresa según el id proporcionado
-        $empresa = Empresa::find($idEmpresa);
-        $nombreEmpresa = $empresa ? $empresa->nombre : 'Nombre no encontrado';
+        // Obtener el nombre de la empresa según el empleado o admin logueado
+        $empleado = Auth::user()->empleado;
+        $nombreEmpresa = $empleado && $empleado->departamento->sucursal->empresa->nombre ? $empleado->departamento->sucursal->empresa->nombre : 'Nombre no encontrado';
+        $logo = $empleado && $empleado->departamento->sucursal->empresa->logo ? $empleado->departamento->sucursal->empresa->logo : NULL;
+
 
         // Preparar la consulta SQL para llamar al procedimiento almacenado
         $results = DB::select(
@@ -371,6 +375,82 @@ class ActivoController extends Controller
                     'resultados' => $results,
                     'tipoDepreciacion' => $tipoDepreciacion,
                     'nombreEmpresa' => $nombreEmpresa, // Pasar el nombre de la empresa a la vista
+                    'logo' => $logo, // Pasar el logo de la empresa a la vista
+                    'totalActivos' => $totalActivos,
+                    'totalDepreciacion' => $totalDepreciacion,
+                    'totalDepreciacionAcumulada' => $totalDepreciacionAcumulada,
+                    'totalValorEnLibros' => $totalValorEnLibros,
+                ]
+            );
+
+            // Convertir el PDF a base64 para enviarlo mediante JSON
+            $pdfBase64 = base64_encode($pdf->output());
+
+            return response()->json([
+                'type' => 'success',
+                'pdf' => $pdfBase64,
+            ]);
+        }
+    }
+
+    // Generar PDF del activo en especifico con todos sus bienes
+    public function pdfActivo(Request $request, $idActivo)
+    {
+        $empleado = Auth::user()->empleado;
+        $activo = Activo::find($idActivo);
+
+        // Configurar los parámetros iniciales para el activo en especifico que se selecciono
+        $idSucursal = $empleado->departamento->sucursal->idSucursal;
+        $idDepartamento = $empleado->departamento->idDepartamento;
+        $tipoDepreciacion = $request->input('tipo');
+        $idEmpresa = $empleado->departamento->sucursal->empresa->idEmpresa;
+        $logo = $empleado && $empleado->departamento->sucursal->empresa->logo ? $empleado->departamento->sucursal->empresa->logo : NULL;
+
+
+        // Obtener el nombre de la empresa según el empleado o admin logueado
+        $nombreEmpresa = $empleado && $empleado->departamento && $empleado->departamento->sucursal && $empleado->departamento->sucursal->empresa
+            ? $empleado->departamento->sucursal->empresa->nombre
+            : 'Nombre no encontrado';
+
+
+        // Preparar la consulta SQL para llamar al procedimiento almacenado
+        $results = DB::select(
+            'CALL ObtenerDepreciacion(?, ?, ?, ?, ?, NULL)',
+            [$tipoDepreciacion, $idSucursal, $idDepartamento, $idEmpresa, $idActivo]
+        );
+
+        // Calcular el total de activos
+        $totalActivos = count($results); // Contar el número de filas en los resultados
+
+        // Calcular los totales para cada columna
+        $totalPrecio = 0;
+        $totalDepreciacion = 0;
+        $totalDepreciacionAcumulada = 0;
+        $totalValorEnLibros = 0;
+
+        foreach ($results as $resultado) {
+            $totalPrecio += $resultado->precio;
+            $totalDepreciacion += $resultado->depreciacion;
+            $totalDepreciacionAcumulada += $resultado->depreciacion_acumulada;
+            $totalValorEnLibros += $resultado->valor_en_libros;
+        }
+
+        // Verificar si no se encontraron datos
+        if (empty($results)) {
+            return response()->json([
+                'type' => 'info',
+                'message' => 'No existen registros para generar el informe.',
+            ]);
+        } else {
+            // Pasar los resultados a la vista y generar el PDF
+            $pdf = Pdf::loadView(
+                'activos.bienes.pdf',
+                [
+                    'resultados' => $results,
+                    'tipoDepreciacion' => $tipoDepreciacion,
+                    'nombreEmpresa' => $nombreEmpresa, // Pasar el nombre de la empresa a la vista
+                    'logo' => $logo,
+                    'activo' => $activo,
                     'totalActivos' => $totalActivos,
                     'totalDepreciacion' => $totalDepreciacion,
                     'totalDepreciacionAcumulada' => $totalDepreciacionAcumulada,

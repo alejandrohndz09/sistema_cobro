@@ -558,7 +558,7 @@ function setDepreciationType(type) {
     document.getElementById('tipo').value = type;
 }
 
-// Función para enviar el formulario
+// Función para enviar el formulario y generar el PDF
 function submitForm() {
     // Obtener los datos del formulario
     const formData = {

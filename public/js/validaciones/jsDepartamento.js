@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#departamentoForm').submit(function (e) {
+    $('#ProductoForm').submit(function (e) {
         e.preventDefault();
         let form = $(this);
         let url = form.attr('action');

@@ -129,7 +129,7 @@ $(document).ready(function () {
     });
 
     // Evento click para el botón de agregar fila
-    $('.btnAgregarAd').on('click',  function (e) {
+    $('.btnAgregarAd').on('click', function (e) {
         e.preventDefault();
         let camposCompletos = true;
 
@@ -481,8 +481,8 @@ function mostrarDatos() {
                     </div>
                 </td>
                 <td class="px-1 text-xs">
-                    <span class="badge badge-xs opacity-7 bg-${a.estado == 1 ? 'success' :  (a.estado==2?'dark':(a.estado==3?'info':'danger'))}">
-                        ${a.estado == 1 ? 'Activo' : (a.estado==2?'Vendido':(a.estado==3?'Donado':'Desecho'))}
+                    <span class="badge badge-xs opacity-7 bg-${a.estado == 1 ? 'success' : (a.estado == 2 ? 'dark' : (a.estado == 3 ? 'info' : 'danger'))}">
+                        ${a.estado == 1 ? 'Activo' : (a.estado == 2 ? 'Vendido' : (a.estado == 3 ? 'Donado' : 'Desecho'))}
                     </span>
                 </td>
                 <td>
@@ -523,3 +523,44 @@ function instanscearTablaAdquisicion() {
     $('#precioAdquisicion, #fechaAdquisicion, .selectSucursal, .selectDepartamento, .inputCantidad, .btnAgregarAd').prop('disabled', false);
     instanciarTooltips();
 }
+
+function setDepreciationType(type) {
+    // Establecer el tipo de depreciación en el campo oculto
+    document.getElementById('tipo').value = type;
+}
+
+// Función para generar el PDF
+function generatePDF(tipo, element) {
+    // Obtener el idActivo desde el atributo data-id
+    var idActivo = element.getAttribute('data-id');
+
+
+    $.ajax({
+        url: '/activos/pdfActivo/' + idActivo,  // Concatenar idActivo a la URL
+        type: 'GET',
+        data: { tipo: tipo },  // Pasar tipo de depreciación como parámetro
+        success: function (response) {
+            if (response.type === 'info') {
+                Toast.fire({
+                    icon: response.type,
+                    title: response.message
+                });
+            } else {
+                const byteCharacters = atob(response.pdf);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+                const pdfURL = URL.createObjectURL(blob);
+                window.open(pdfURL, '_blank');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseJSON);
+            alert('Ocurrió un error al generar el PDF. Por favor, intente nuevamente.');
+        }
+    });
+}
+
