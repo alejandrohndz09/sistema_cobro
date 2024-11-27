@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	//Pantalla activos
 	Route::get('/activos/pdf', 'App\Http\Controllers\ActivoController@pdf');
+	Route::get('/activos/pdfActivo/{id}', 'App\Http\Controllers\ActivoController@pdfActivo');
 	Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
 	Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');
 	Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
@@ -88,6 +89,16 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
 	Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
 
+
+	//Pantalla de productos
+	Route::resource('/productos', 'App\Http\Controllers\ProductoController');
+	Route::get('/obtener-productos', 'App\Http\Controllers\ProductoController@getProductos');
+	Route::get('/producto-detalle/{tipo}/{id}', 'App\Http\Controllers\ProductoController@getDetallesProducto');
+	Route::get('/productos/baja/{id}', 'App\Http\Controllers\ProductoController@baja');
+	Route::get('/productos/alta/{id}', 'App\Http\Controllers\ProductoController@alta');
+
+		Route::get('billing', function () {
+
 	Route::get('gestión-comercial', function () {
 		return view('gestion-comercial.index');
 	});
@@ -102,6 +113,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('/gestión-comercial/ventas', 'App\Http\Controllers\VentaController');
 
 	Route::get('billing', function () {
+
 		return view('billing');
 	})->name('billing');
 

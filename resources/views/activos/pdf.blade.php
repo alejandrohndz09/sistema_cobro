@@ -97,7 +97,7 @@
         <h5>Informe de depreciación {{ $tipoDepreciacion }}</h5>
         <h6 class="fecha">Fecha: {{ now()->format('d/m/Y') }}</h6>
         <div class="line"></div>
-        <img src="assets/img/logos/mastercard.png" alt="Logo" class="logo">
+        <img src="{{ $logo }}" alt="Logo" class="logo">
     </div>
 
     <!-- Tabla de datos -->
