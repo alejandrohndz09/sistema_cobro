@@ -66,14 +66,15 @@
                             @error('contraseña')
                                 <span class="text-danger  text-xs mb-3">{{ $message }}</span>
                             @enderror
-                            <div class="d-flex flex-grow-1 " style="margin-left:5px; gap:3px">
-                                <input type="checkbox" id="mostrarClave">
-                                <span class="text-sm">Mostrar contraseña</span>
-                            </div>
-
-
+                            
+                            <div class="form-check form-check-info ms-3">
+                                <input class="form-check-input" type="checkbox" id="mostrarClave" >
+                                <label class="form-check-label" for="mostrarClave">
+                                    Mostrar contraseña
+                                </label>
+                              </div>
                         </div>
-                        <button type="submit" class="btn btn-icon bg-gradient-dark mt-3 mb-0 w-100">Iniciar
+                        <button type="submit" class="btn btn-icon bg-gradient-dark mt-5 mb-0 w-100">Iniciar
                             sesión</button>
                         {{-- <div class="d-flex mt-3 justify-content-center">
                             <p style="text-align: end; margin-bottom: 0;"><a class=""
