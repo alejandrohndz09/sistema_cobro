@@ -21,7 +21,7 @@ class ProductoController extends Controller
     {
         $productos = Producto::all();
 
-        return view('producto.index', compact('productos', 'productos'));
+        return view('gestion-comercial.productos.index', compact('productos', 'productos'));
     }
 
 
@@ -96,7 +96,7 @@ class ProductoController extends Controller
         $kardex = DB::select('CALL obtener_kardex(?)', [$id]);
 
         // Pasar ambos datos a la vista
-        return view('producto.detalleProducto', compact('producto', 'kardex'));
+        return view('gestion-comercial.s.detalleProducto', compact('producto', 'kardex'));
     }
 
     /**

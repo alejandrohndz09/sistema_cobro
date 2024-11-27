@@ -89,19 +89,17 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
 	Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
 
-
-	//Pantalla de productos
-	Route::resource('/productos', 'App\Http\Controllers\ProductoController');
-	Route::get('/obtener-productos', 'App\Http\Controllers\ProductoController@getProductos');
-	Route::get('/producto-detalle/{tipo}/{id}', 'App\Http\Controllers\ProductoController@getDetallesProducto');
-	Route::get('/productos/baja/{id}', 'App\Http\Controllers\ProductoController@baja');
-	Route::get('/productos/alta/{id}', 'App\Http\Controllers\ProductoController@alta');
-
-		Route::get('billing', function () {
-
 	Route::get('gestión-comercial', function () {
 		return view('gestion-comercial.index');
 	});
+	
+	//Pantalla de productos
+	Route::get('/gestión-comercial/productos/obtener-productos', 'App\Http\Controllers\ProductoController@getProductos');
+	Route::get('/gestión-comercial/productos/producto-detalle/{tipo}/{id}', 'App\Http\Controllers\ProductoController@getDetallesProducto');
+	Route::get('/gestión-comercial/productos/baja/{id}', 'App\Http\Controllers\ProductoController@baja');
+	Route::get('/gestión-comercial/productos/alta/{id}', 'App\Http\Controllers\ProductoController@alta');
+	Route::resource('/gestión-comercial/productos', 'App\Http\Controllers\ProductoController');
+
 	//Pantalla ventas
 	Route::get('/gestión-comercial/ventas/pdf', 'App\Http\Controllers\VentaController@pdf');
 	Route::get('/gestión-comercial/ventas/obtener-codigo', 'App\Http\Controllers\VentaController@getIdVenta');
