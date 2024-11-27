@@ -89,6 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
 	Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
 
+
 	//Pantalla de productos
 	Route::resource('/productos', 'App\Http\Controllers\ProductoController');
 	Route::get('/obtener-productos', 'App\Http\Controllers\ProductoController@getProductos');
@@ -97,6 +98,22 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/productos/alta/{id}', 'App\Http\Controllers\ProductoController@alta');
 
 		Route::get('billing', function () {
+
+	Route::get('gestión-comercial', function () {
+		return view('gestion-comercial.index');
+	});
+	//Pantalla ventas
+	Route::get('/gestión-comercial/ventas/pdf', 'App\Http\Controllers\VentaController@pdf');
+	Route::get('/gestión-comercial/ventas/obtener-codigo', 'App\Http\Controllers\VentaController@getIdVenta');
+	Route::get('/obtener-ventas/{tipoVenta}/{tipoCliente}', 'App\Http\Controllers\VentaController@getVentas');
+	Route::get('/gestión-comercial/ventas/obtener-productos/{query?}', 'App\Http\Controllers\VentaController@getProductos');
+	Route::get('/gestión-comercial/ventas/obtener-clientes/{query?}', 'App\Http\Controllers\VentaController@getClientes');
+	Route::get('/gestión-comercial/ventas/baja/{id}', 'App\Http\Controllers\VentaController@baja');
+	Route::get('/gestión-comercial/ventas/alta/{id}', 'App\Http\Controllers\VentaController@alta');
+	Route::resource('/gestión-comercial/ventas', 'App\Http\Controllers\VentaController');
+
+	Route::get('billing', function () {
+
 		return view('billing');
 	})->name('billing');
 
