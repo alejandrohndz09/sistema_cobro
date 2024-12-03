@@ -1,14 +1,17 @@
 $(document).ready(function () {
-    $('#ProductoForm').submit(function (e) {
+    $('#departamentoForm, #sucursalForm').submit(function (e) {
         e.preventDefault();
-        let form = $(this);
+        var form = $(this); // Formulario actual
+        var formData = new FormData(form[0]); // Crear un objeto FormData con los datos del formulario
         let url = form.attr('action');
-        let method = $('#method').val();
 
         $.ajax({
-            url: url,
-            method: method,
-            data: form.serialize(),
+            url: url, // URL del método store
+            method: 'POST',  // Método HTTP
+            data: formData,  // Los datos del formulario
+            contentType: false,
+            processData: false,  // No procesar los datos, ya que es FormData
+            cache: false,
             success: function (response) {
                 // Procesar la respuesta exitosa
                 Toast.fire({
@@ -16,6 +19,10 @@ $(document).ready(function () {
                     title: response.message
                 });
                 $('#modalForm').modal('hide');
+                if ($('#evaluar').val() == 1) {
+                    $('#modalFormS').modal('hide');
+                    $('#evaluar').val(0);
+                }
                 // Actualizar la tabla, etc.
                 mostrarDatos();
             },
@@ -77,6 +84,10 @@ $(document).ready(function () {
         agregar();
     });
 
+    $(document).on('click', '.btnEditarE', function () {
+        editarE($(this).data('id'));
+    });
+
     $(document).on('click', '.btnEditar', function () {
         editar($(this).data('id'));
     });
@@ -109,12 +120,31 @@ function agregar() {
 
     //otros
     $('#method').val('POST'); // Cambiar a POST
-    $('#departamentoForm').attr('action', '');
+    $('#departamentoForm').attr('action', '/opciones/departamentos');
     $('#modalForm').modal('show');
 }
 
+function editarE(idSucursal) {
+    $.get('/opciones/sucursal/' + idSucursal + '/edit', function (obj) {
+        const errorSpans = document.querySelectorAll('span.text-danger');
+        errorSpans.forEach(function (span) {
+            span.innerHTML = '';
+        });
+        $('#tituloSucursal').text("Editar Registro");
+        $('#telefono').val(obj.telefono);
+        $('#direccion').val(obj.direccion);
+        $('#ubicacion').val(obj.ubicacion);
+
+        $('#evaluar').val(1);
+        $('#sucursalForm').attr('action', '/opciones/sucursal/' + idSucursal);
+        $('#modalFormS').modal('show');
+    });
+
+}
+
+
 function editar(idDepartamento) {
-    $.get('/empresa/departamentos/' + idDepartamento + '/edit', function (obj) {
+    $.get('/opciones/departamentos/' + idDepartamento + '/edit', function (obj) {
         // Limpieza de spans de error
         const errorSpans = document.querySelectorAll('span.text-danger');
         errorSpans.forEach(function (span) {
@@ -125,12 +155,9 @@ function editar(idDepartamento) {
         $('#titulo').text("Editar Registro");
         $('#nombre').val(obj.nombre);
 
-        // Setear el valor de idSucursal en el combo box basado en el id de la sucursal
-        $('#idSucursal').val(obj.idSucursal);
-
         // Otros ajustes
         $('#method').val('PUT'); // Cambiar a PUT
-        $('#departamentoForm').attr('action', '/empresa/departamentos/' + idDepartamento);
+        $('#departamentoForm').attr('action', '/opciones/departamentos/' + idDepartamento);
         $('#modalForm').modal('show');
     });
 }
@@ -138,21 +165,21 @@ function editar(idDepartamento) {
 
 function eliminar(idDepartamento) {
     //Preparacion visual y direccion de la accion en el formulario
-    $('#confirmarForm').attr('action', '/empresa/departamentos/' + idDepartamento);
+    $('#confirmarForm').attr('action', '/opciones/departamentos/' + idDepartamento);
     $('#methodC').val('Delete')
-    $('#dialogo').text('Está a punto de eliminar permanentemente el registro. ¿Desea continuar?')
+    $('#dialogoDepartamento').text('Está a punto de eliminar permanentemente el registro. ¿Desea continuar?')
 }
 
 function baja(idDepartamento) {
     //Preparacion visual y direccion de la accion en el formulario
-    $('#confirmarForm').attr('action', '/empresa/departamentos/baja/' + idDepartamento);
+    $('#confirmarForm').attr('action', '/opciones/departamentos/baja/' + idDepartamento);
     $('#methodC').val('get')
-    $('#dialogo').text('Está a punto de deshabilitar el registro. ¿Desea continuar?')
+    $('#dialogoDepartamento').text('Está a punto de deshabilitar el registro. ¿Desea continuar?')
 }
 
 function alta(idDepartamento) {
     $.ajax({
-        url: '/empresa/departamentos/alta/' + idDepartamento,
+        url: '/opciones/departamentos/alta/' + idDepartamento,
         method: 'get',
         success: function (response) {
             // Procesar la respuesta exitosa
@@ -177,8 +204,9 @@ function alta(idDepartamento) {
     });
 }
 function mostrarDatos() {
+    const valor = $('#idSucursal').val();
     $.ajax({
-        url: '/obtener-departamentos',
+        url: '/obtener-departamentos/' + valor,
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -219,9 +247,6 @@ function mostrarDatos() {
                     <td class="px-1">
                         <p class="text-xs font-weight-bold mb-0">${c.nombre}</p>
                     </td>
-                    <td class="px-1">
-                        <p class="text-xs font-weight-bold mb-0">${c.idSucursal}%</p>
-                    </td>
                     <td class="px-1 text-sm">
                         <span class="badge badge-xs opacity-7 bg-${c.estado == 1 ? 'success' : 'secondary'}">
                             ${c.estado == 1 ? 'activo' : 'inactivo'}
@@ -248,4 +273,27 @@ function mostrarDatos() {
             });
         }
     });
+}
+
+function validarInput(input) {
+    let telefonoValue = input.value;
+
+    // Eliminar caracteres no válidos (mantener solo dígitos, espacio y guiones)
+    telefonoValue = telefonoValue.replace(/[^+\d\s-]/g, '');
+
+    // Eliminar guiones existentes para facilitar el procesamiento
+    telefonoValue = telefonoValue.replace(/-/g, '');
+
+    // Limitar la longitud máxima a 8 caracteres (sin incluir el guion)
+    if (telefonoValue.length > 8) {
+        telefonoValue = telefonoValue.slice(0, 8);
+    }
+
+    // Agregar un guion automáticamente después del 4to carácter
+    if (telefonoValue.length > 4) {
+        telefonoValue = telefonoValue.slice(0, 4) + '-' + telefonoValue.slice(4);
+    }
+
+    // Asignar el valor al campo de entrada
+    input.value = telefonoValue;
 }
