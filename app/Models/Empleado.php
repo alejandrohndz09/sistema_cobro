@@ -52,7 +52,8 @@ class Empleado extends Model
 	{
 		return $this->belongsTo(Departamento::class, 'idDepartamento');
 	}
-
+	
+	
 	public function compras()
 	{
 		return $this->hasMany(Compra::class, 'idEmpleado');

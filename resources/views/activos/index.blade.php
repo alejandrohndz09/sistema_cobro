@@ -80,7 +80,7 @@
                         <div class="card-header pb-0 p-3">
                             <div class="row">
                                 <div class="col-6 d-flex align-items-center">
-                                    <h6 class="mb-0">Registros</h6>
+                                    <h4 class="mb-0">Registros</h4>
                                 </div>
                                 <div class="col-6 d-flex align-items-end justify-content-end">
                                     <div class="input-group" style="width: 60%">
@@ -90,7 +90,8 @@
                                     </div>
                                     <div class="text-end ms-2">
                                         <a class="btn bg-gradient-dark mb-0" href="javascript:;" data-bs-toggle="modal"
-                                            data-bs-target="#modalForm"><i class="fas fa-plus"></i>&nbsp;&nbsp;Agregar</a>
+                                            id="btnAgregar" data-bs-target="#modalForm"><i
+                                                class="fas fa-plus"></i>&nbsp;&nbsp;Agregar</a>
                                     </div>
                                 </div>
                             </div>
@@ -100,191 +101,104 @@
                                 <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                ID
+                                            <th style="width: 3%">
                                             </th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Photo
+                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Código
                                             </th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Name
+                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Activo
                                             </th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Email
+                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Bienes Reg.
                                             </th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                role
+                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                V. Act. Acum.
                                             </th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Creation Date
+                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Estado
                                             </th>
                                             <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Action
+                                                class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Acción
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
-                                        <tr>
-                                            <td class="ps-4">
-                                                <p class="text-xs font-weight-bold mb-0">1</p>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3">
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Admin</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">admin@softui.com</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Admin</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">16/06/18</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="#" class="mx-3" data-bs-toggle="tooltip"
-                                                    data-bs-original-title="Edit user">
-                                                    <i class="fas fa-user-edit text-secondary"></i>
-                                                </a>
-                                                <span>
-                                                    <i class="cursor-pointer fas fa-trash text-secondary"></i>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <p class="text-xs font-weight-bold mb-0">2</p>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <img src="/assets/img/team-1.jpg" class="avatar avatar-sm me-3">
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Creator</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">creator@softui.com</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Creator</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">05/05/20</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="#" class="mx-3" data-bs-toggle="tooltip"
-                                                    data-bs-original-title="Edit user">
-                                                    <i class="fas fa-user-edit text-secondary"></i>
-                                                </a>
-                                                <span>
-                                                    <i class="cursor-pointer fas fa-trash text-secondary"></i>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <p class="text-xs font-weight-bold mb-0">3</p>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <img src="/assets/img/team-3.jpg" class="avatar avatar-sm me-3">
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Member</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">member@softui.com</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Member</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">23/06/20</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="#" class="mx-3" data-bs-toggle="tooltip"
-                                                    data-bs-original-title="Edit user">
-                                                    <i class="fas fa-user-edit text-secondary"></i>
-                                                </a>
-                                                <span>
-                                                    <i class="cursor-pointer fas fa-trash text-secondary"></i>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <p class="text-xs font-weight-bold mb-0">4</p>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <img src="/assets/img/team-4.jpg" class="avatar avatar-sm me-3">
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Peterson</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">peterson@softui.com</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Member</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">26/10/17</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="#" class="mx-3" data-bs-toggle="tooltip"
-                                                    data-bs-original-title="Edit user">
-                                                    <i class="fas fa-user-edit text-secondary"></i>
-                                                </a>
-                                                <span>
-                                                    <i class="cursor-pointer fas fa-trash text-secondary"></i>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <p class="text-xs font-weight-bold mb-0">5</p>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <img src="/assets/img/marie.jpg" class="avatar avatar-sm me-3">
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Marie</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">marie@softui.com</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">Creator</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">23/01/21</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="#" class="mx-3" data-bs-toggle="tooltip"
-                                                    data-bs-original-title="Edit user">
-                                                    <i class="fas fa-user-edit text-secondary"></i>
-                                                </a>
-                                                <span>
-                                                    <i class="cursor-pointer fas fa-trash text-secondary"></i>
-                                                </span>
-                                            </td>
-                                        </tr>
+                                        @foreach ($activos as $a)
+                                            <tr class="tr-link" data-id="{{ $a->idActivo }}">
+                                                <td>
+
+                                                    @if (isset($a->imagen))
+                                                        <div>
+                                                            <img src="../assets/img/activos/{{ $a->imagen }}"
+                                                                class="avatar avatar-sm me-3">
+                                                        </div>
+                                                    @else
+                                                        <div
+                                                            class="avatar avatar-sm icon bg-gradient-info shadow text-center border-radius-lg">
+                                                            <i class="fas fa-cube opacity-10 text-sm"></i>
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                                <td class="px-1">
+                                                    <p class="text-xs font-bold mb-0">{{ $a->idActivo }}</p>
+                                                </td>
+                                                <td class="px-1">
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $a->nombre }}</p>
+                                                    <p class="text-xxs  mb-0">({{ $a->categoria->nombre }})</p>
+                                                </td>
+                                                <td class="px-5">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $a->bienes->where('estado', 1)->count() }}</p>
+                                                </td>
+                                                <td class="px-1">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ '$' . number_format($a->bienes->sum('precio'), 2, '.', ',') }}
+                                                    </p>
+                                                </td>
+                                                <td class="px-1 text-xs">
+                                                    <span
+                                                        class="badge badge-xs opacity-7 bg-{{ $a->estado == 1 ? 'success' : 'secondary' }} ">
+                                                        {{ $a->estado == 1 ? 'activo' : 'inactivo' }}</span>
+                                                </td>
+                                                <td>
+                                                    @if ($a->estado == 1)
+                                                        <a role="button" data-bs-toggle="modal"
+                                                            data-bs-target="#modalForm" data-id="{{ $a->idActivo }}"
+                                                            data-bs-tt="tooltip" data-bs-original-title="Editar"
+                                                            class="btnEditar me-2">
+                                                            <i class="fas fa-pen text-secondary"></i>
+                                                        </a>
+
+                                                        <a role="button" data-bs-toggle="modal"
+                                                            data-bs-target="#modalConfirm" data-id="{{ $a->idActivo }}"
+                                                            data-bs-tt="tooltip" data-bs-original-title="Deshabilitar"
+                                                            class="btnDeshabilitar">
+                                                            <i class="fas fa-minus-circle text-secondary"></i>
+                                                        </a>
+                                                    @else
+                                                        <a role="button" data-id="{{ $a->idActivo }}"
+                                                            data-bs-tt="tooltip" data-bs-original-title="Habilitar"
+                                                            class="btnHabilitar me-2">
+                                                            <i class="fas fa-arrow-up text-secondary"></i>
+                                                        </a>
+
+                                                        <a role="button" data-bs-toggle="modal"
+                                                            data-bs-target="#modalConfirm" data-id="{{ $a->idActivo }}"
+                                                            data-bs-tt="tooltip" data-bs-original-title="Eliminar"
+                                                            class="btnEliminar">
+                                                            <i class="fas fa-trash text-secondary"></i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                                 <div id="pagination" class="d-flex justify-content-center mt-2"></div>
@@ -296,20 +210,24 @@
 
             <div class="col-lg-3">
                 <div class="row mx-1">
-                    <a href="{{url('/activos/categorias')}}" class="btn bg-white text text-transform-none border-radius-lg">
+                    <a href="{{ url('/activos/categorias') }}"
+                        class="btn bg-white text text-transform-none border-radius-lg">
                         <i class="fas fa-tags me-2"></i>
                         <span style="text-transform: none">Gestión de categorías</span>
                     </a>
                 </div>
+
                 <div class="row mx-1 dropdown">
-                    <a href="" class="btn bg-gradient-dark dropdown-toggle text text-transform-none border-radius-lg"
+                    <a href=""
+                        class="btn bg-gradient-dark dropdown-toggle text text-transform-none border-radius-lg"
                         data-bs-toggle="dropdown" id="navbarDropdownMenuLink2">
                         <i class="fas fa-file-contract me-2"></i>
                         <span style="text-transform: none">Informes de depreciación</span>
                     </a>
                     <ul class="dropdown-menu w-100" aria-labelledby="navbarDropdownMenuLink2">
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
+                                onclick="setDepreciationType('anual')">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Anual
@@ -317,7 +235,8 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
+                                onclick="setDepreciationType('mensual')">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Mensual
@@ -325,7 +244,8 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#PDFmodal"
+                                onclick="setDepreciationType('diaria')">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Diaria
@@ -334,7 +254,6 @@
                         </li>
                     </ul>
                 </div>
-               
                 <div class="card">
                     <div class="card-header pb-0 p-3">
                         <div class="row d-flex align-items-center">

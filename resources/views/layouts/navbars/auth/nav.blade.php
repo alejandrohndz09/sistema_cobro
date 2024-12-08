@@ -56,10 +56,37 @@
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 d-flex justify-content-end" id="navbar">
             <ul class="navbar-nav  justify-content-end">
                 <li class="nav-item d-flex align-items-center">
-                    <a href="{{ url('/logout') }}" class="nav-link text-body font-weight-bold px-0">
+                    <a  href="javascript:;"  data-bs-toggle="modal" data-bs-target="#modalLogout"data-bs-toggle=""="nav-link text-body font-weight-bold px-0">
                         <i class="fa fa-user me-sm-1"></i>
                         <span class="d-sm-inline d-none">Cerrar sesión</span>
                     </a>
+                    <div class="modal fade" id="modalLogout" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-mg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-0 ">
+                                    <div class="card card-plain">
+                                        <div class="card-header pb-0 text-left">
+                                            <h3 class="text-dark">Confirmar operación</h3>
+                                            <p id="dialogo" class="mb-0">Está a punto de cerrar sesión. ¿Desea continuar?</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <form role="form text-left" action="{{url('/logout')}}" method="POST">
+                                                @csrf
+                                                <input type="hidden" id="methodC">
+                                               <div class="text-end">
+                                                    <button type="reset" data-bs-dismiss="modal"
+                                                        style="border-color:transparent" class="btn btn-outline-dark btn-sm mt-4 mb-0">
+                                                        <i class="fas fa-times text-xs"></i>&nbsp;&nbsp;No</button>
+                                                    <button type="submit" class="btn btn-icon bg-gradient-danger btn-sm mt-4 mb-0">
+                                                        <i class="fas fa-check text-xs"></i>&nbsp;&nbsp;Sí</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
