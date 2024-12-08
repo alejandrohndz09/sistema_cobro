@@ -4,40 +4,50 @@
             <div class="modal-body p-0">
                 <div class="card card-plain">
                     <div class="card-header pb-0 text-left">
-                        <h3 class="text-dark" id="titulo">Agregar Usuario</h3>
+                        <h3 class="text-dark" id="titulo">Agregar Proveedor</h3>
                         <p class="mb-0">(*) Campos Obligatorios</p>
                     </div>
                     <div class="card-body">
-                        <form id="usuarioForm" method="POST">
+                        <form id="proveedorForm" method="POST">
                             @csrf
                             <input type="hidden" name="_method" id="method" value="POST">
                             
-                            <!-- Campo Usuario -->
-                            <label for="usuario">Usuario: *</label>
+                            <!-- Campo Nombre -->
+                            <label for="nombre">Nombre: *</label>
                             <div class="input-group mb-1">
-                                <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Nombre de usuario" required>
+                                <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre del proveedor" required>
                             </div>
+                            <span id="error-nombre" class="text-danger text-xs mb-3"></span>
 
-                           <!-- Campo ID Empleado -->
-                             <label for="idEmpleado">Empleado: *</label>
-                             <div class="input-group mb-1">
-                                <select name="idEmpleado" id="idEmpleado" class="form-control" required>
-                                <option value="">Seleccione un empleado</option>
-                                @foreach($empleados as $empleado)
-                                <option value="{{ $empleado->idEmpleado }}">{{ $empleado->nombres }}</option>
-                                @endforeach
-                                </select>
-                              </div>
+                            <!-- Campo Dirección -->
+                            <label for="direccion">Dirección: *</label>
+                            <div class="input-group mb-1">
+                                <input type="text" name="direccion" id="direccion" class="form-control" placeholder="Dirección del proveedor" required>
+                            </div>
+                            <span id="error-direccion" class="text-danger text-xs mb-3"></span>
 
-                            
+                            <!-- Campo Teléfono -->
+                            <label for="telefono">Teléfono: *</label>
+                            <div class="input-group mb-1">
+                                <input type="text" name="telefono" id="telefono" class="form-control" placeholder="Teléfono del proveedor" required>
+                            </div>
+                            <span id="error-telefono" class="text-danger text-xs mb-3"></span>
+
+                            <!-- Campo Correo -->
+                            <label for="correo">Correo: *</label>
+                            <div class="input-group mb-1">
+                                <input type="email" name="correo" id="correo" class="form-control" placeholder="Correo electrónico del proveedor" required>
+                            </div>
+                            <span id="error-correo" class="text-danger text-xs mb-3"></span>
 
                             <div class="text-end">
-                                <button type="button" data-bs-dismiss="modal" style="border-color:transparent" class="btn btn-outline-dark btn-sm mt-4 mb-0">
+                             <button type="button" data-bs-dismiss="modal" style="border-color:transparent" class="btn btn-outline-dark btn-sm mt-4 mb-0">
                                     <i class="fas fa-undo text-xs"></i>&nbsp;&nbsp;Cancelar</button>
                                 <button type="submit" class="btn btn-icon bg-gradient-success btn-sm mt-4 mb-0">
                                     <i class="fas fa-check text-xs"></i>&nbsp;&nbsp;Guardar</button>
                             </div>
                         </form>
+                        
                     </div>
                 </div>
             </div>

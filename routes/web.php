@@ -86,12 +86,19 @@ Route::group(['middleware' => 'auth'], function () {
 	//Pantalla de usuarios
 	Route::resource('/opciones/usuarios', 'App\Http\Controllers\UsuarioController');
 	Route::get('/obtener-usuarios', 'App\Http\Controllers\UsuarioController@getUsuarios');
-	Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
-	Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
+  Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
+  Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
+
+	//Pantalla de Proveedor
+	Route::resource('/opciones/proveedores', 'App\Http\Controllers\ProveedorController');
+	Route::get('/obtener-proveedores', 'App\Http\Controllers\ProveedorController@getProveedores');
+  Route::get('/opciones/proveedores/baja/{id}', 'App\Http\Controllers\ProveedorController@baja');
+  Route::get('/opciones/proveedores/alta/{id}', 'App\Http\Controllers\ProveedorController@alta');
 
 	Route::get('gestión-comercial', function () {
 		return view('gestion-comercial.index');
 	});
+
 	
 	//Pantalla de productos
 	Route::get('/gestión-comercial/productos/obtener-productos', 'App\Http\Controllers\ProductoController@getProductos');
