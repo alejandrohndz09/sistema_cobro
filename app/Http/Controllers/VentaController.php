@@ -386,7 +386,7 @@ class VentaController extends Controller
             'nombre',
             'estado',
             DB::raw('(
-                    (SELECT IFNULL(SUM(dc.cantidad), 0) FROM detalle_compra dc WHERE dc.idProducto = producto.idProducto) - 
+                    (SELECT IFNULL(SUM(dc.cantidad), 0) FROM detalle_compra dc WHERE dc.idProducto = producto.idProducto) -
                      (SELECT IFNULL(SUM(dv.cantidad), 0) FROM detalle_venta dv WHERE dv.idProducto = producto.idProducto)
                      ) AS stockTotal'),
             DB::raw('ROUND((
@@ -413,7 +413,8 @@ class VentaController extends Controller
         return response()->json($productos);
     }
 
-    public function getIdVenta(){
+    public function getIdVenta()
+    {
         return response()->json($this->generarId());
     }
     public function pdf(Request $request)
@@ -480,5 +481,45 @@ class VentaController extends Controller
                 'pdf' => $pdfBase64,
             ]);
         }
+    }
+
+    public function pdfFactura($idVenta)
+    {
+        // Obtener la venta con el cliente relacionado
+        $venta = Venta::with(['cliente_natural', 'cliente_juridico'])->findOrFail($idVenta);
+
+        // Obtener los detalles de la venta
+        $detalles = DetalleVenta::where('idVenta', $idVenta)
+            ->with('producto') // Cargar relación con producto
+            ->get();
+
+        // Cálculo manual de precio de venta para cada detalle
+        foreach ($detalles as $detalle) {
+            $totalCompra = DB::table('detalle_compra')
+                ->where('idProducto', $detalle->idProducto)
+                ->sum(DB::raw('precio * cantidad')); // Suma de precio * cantidad
+
+            $totalCantidad = DB::table('detalle_compra')
+                ->where('idProducto', $detalle->idProducto)
+                ->sum('cantidad'); // Suma de las cantidades
+
+            // Calcular precio de venta
+            $detalle->precioVenta = round(($totalCompra / ($totalCantidad ?: 1)) * 1.10, 2);
+        }
+
+        // Obtener la empresa
+        $empresa = Empresa::first();
+
+        // Obtener la sucursal relacionada
+        $sucursal = null;
+        if ($empresa && $empresa->empleado && $empresa->empleado->departamento) {
+            $sucursal = $empresa->empleado->departamento->sucursal;
+        }
+
+        // Generar el PDF
+        $pdf = PDF::loadView('gestion-comercial.ventas.factura', compact('venta', 'detalles', 'empresa', 'sucursal'));
+
+        // Descargar el PDF
+        return $pdf->download('Factura-Venta-' . $venta->idVenta . '.pdf');
     }
 }

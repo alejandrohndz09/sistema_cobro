@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\CuotaController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoUserController;
@@ -25,125 +26,136 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('/', [HomeController::class, 'home']);
-	Route::get('inicio', function () {
-		return view('dashboard');
-	})->name('inicio');
+    Route::get('/', [HomeController::class, 'home']);
+    Route::get('inicio', function () {
+        return view('dashboard');
+    })->name('inicio');
 
-	//Pantalla categorias
-	Route::resource('/activos/categorias', 'App\Http\Controllers\CategoriaController');
-	Route::get('/obtener-categorias', 'App\Http\Controllers\CategoriaController@getCategorias');
-	Route::get('/activos/categorias/baja/{id}', 'App\Http\Controllers\CategoriaController@baja');
-	Route::get('/activos/categorias/alta/{id}', 'App\Http\Controllers\CategoriaController@alta');
+    //Pantalla categorias
+    Route::resource('/activos/categorias', 'App\Http\Controllers\CategoriaController');
+    Route::get('/obtener-categorias', 'App\Http\Controllers\CategoriaController@getCategorias');
+    Route::get('/activos/categorias/baja/{id}', 'App\Http\Controllers\CategoriaController@baja');
+    Route::get('/activos/categorias/alta/{id}', 'App\Http\Controllers\CategoriaController@alta');
 
-	//Pantalla bienes
-	Route::resource('/activos/{idActivo}/bienes', 'App\Http\Controllers\BienController');
-	Route::get('/activos/{idActivo}/obtener-bienes', 'App\Http\Controllers\BienController@getBienes');
-	Route::post('/activos/bienes/baja/{id}', 'App\Http\Controllers\BienController@baja');
-	Route::get('/activos/bienes/alta/{id}', 'App\Http\Controllers\BienController@alta');
+    //Pantalla bienes
+    Route::resource('/activos/{idActivo}/bienes', 'App\Http\Controllers\BienController');
+    Route::get('/activos/{idActivo}/obtener-bienes', 'App\Http\Controllers\BienController@getBienes');
+    Route::post('/activos/bienes/baja/{id}', 'App\Http\Controllers\BienController@baja');
+    Route::get('/activos/bienes/alta/{id}', 'App\Http\Controllers\BienController@alta');
 
-	//Pantalla activos
-	Route::get('/activos/pdf', 'App\Http\Controllers\ActivoController@pdf');
-	Route::get('/activos/pdfActivo/{id}', 'App\Http\Controllers\ActivoController@pdfActivo');
-	Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
-	Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');
-	Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
-	Route::get('/activos/obtener-categorias', 'App\Http\Controllers\ActivoController@getCategorias');
-	Route::get('/activos/obtener-sucursales', 'App\Http\Controllers\ActivoController@getSucursales');
-	Route::get('/activos/obtener-departamentos/{idSucursal}', 'App\Http\Controllers\ActivoController@getDepartamentos');
-	Route::resource('/activos', 'App\Http\Controllers\ActivoController');
+    //Pantalla activos
+    Route::get('/activos/pdf', 'App\Http\Controllers\ActivoController@pdf');
+    Route::get('/activos/pdfActivo/{id}', 'App\Http\Controllers\ActivoController@pdfActivo');
+    Route::get('/obtener-activos', 'App\Http\Controllers\ActivoController@getActivos');
+    Route::get('/activos/baja/{id}', 'App\Http\Controllers\ActivoController@baja');
+    Route::get('/activos/alta/{id}', 'App\Http\Controllers\ActivoController@alta');
+    Route::get('/activos/obtener-categorias', 'App\Http\Controllers\ActivoController@getCategorias');
+    Route::get('/activos/obtener-sucursales', 'App\Http\Controllers\ActivoController@getSucursales');
+    Route::get('/activos/obtener-departamentos/{idSucursal}', 'App\Http\Controllers\ActivoController@getDepartamentos');
+    Route::resource('/activos', 'App\Http\Controllers\ActivoController');
 
 
-	Route::get('opciones', function () {
-		return view('opciones.index');
-	})->name('opciones');
+    Route::get('opciones', function () {
+        return view('opciones.index');
+    })->name('opciones');
 
-	//Pantalla de departamentos
-	Route::resource('/empresa/departamentos', 'App\Http\Controllers\DepartamentoController');
-	Route::get('/obtener-departamentos', 'App\Http\Controllers\DepartamentoController@getDepartamentos');
-	Route::get('/empresa/departamentos/baja/{id}', 'App\Http\Controllers\DepartamentoController@baja');
-	Route::get('/empresa/departamentos/alta/{id}', 'App\Http\Controllers\DepartamentoController@alta');
+    //Pantalla de departamentos
+    Route::resource('/empresa/departamentos', 'App\Http\Controllers\DepartamentoController');
+    Route::get('/obtener-departamentos', 'App\Http\Controllers\DepartamentoController@getDepartamentos');
+    Route::get('/empresa/departamentos/baja/{id}', 'App\Http\Controllers\DepartamentoController@baja');
+    Route::get('/empresa/departamentos/alta/{id}', 'App\Http\Controllers\DepartamentoController@alta');
 
-	//Pantalla empresa
-	Route::resource('/opciones/empresa', 'App\Http\Controllers\EmpresaController');
-  Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
-  Route::get('/opciones/empresa/{id}/editEmpresa', 'App\Http\Controllers\EmpresaController@editEmpresa')->name('empresa.edit');
-  Route::put('/opciones/empresa/{id}/updateEmpresa', 'App\Http\Controllers\EmpresaController@updateEmpresa')->name('empresa.update');
+    //Pantalla empresa
+    Route::resource('/opciones/empresa', 'App\Http\Controllers\EmpresaController');
+    Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
+    Route::get('/opciones/empresa/{id}/editEmpresa', 'App\Http\Controllers\EmpresaController@editEmpresa')->name('empresa.edit');
+    Route::put('/opciones/empresa/{id}/updateEmpresa', 'App\Http\Controllers\EmpresaController@updateEmpresa')->name('empresa.update');
 
-  //Sucursales
-  Route::resource('/opciones/sucursal', 'App\Http\Controllers\SucursalController');
-  Route::get('/obtener-sucursales', 'App\Http\Controllers\SucursalController@getSucursales');
-  Route::get('/opciones/sucursal/baja/{id}', 'App\Http\Controllers\SucursalController@bajaSucursal');
-  Route::get('/opciones/sucursal/alta/{id}', 'App\Http\Controllers\SucursalController@altaSucursal');
+    //Sucursales
+    Route::resource('/opciones/sucursal', 'App\Http\Controllers\SucursalController');
+    Route::get('/obtener-sucursales', 'App\Http\Controllers\SucursalController@getSucursales');
+    Route::get('/opciones/sucursal/baja/{id}', 'App\Http\Controllers\SucursalController@bajaSucursal');
+    Route::get('/opciones/sucursal/alta/{id}', 'App\Http\Controllers\SucursalController@altaSucursal');
 
-	//Pantalla empleados
-	Route::resource('/opciones/empleados', 'App\Http\Controllers\EmpleadoController');
-	Route::get('/obtener-empleados', 'App\Http\Controllers\EmpleadoController@getEmpleados');
-	Route::get('/opciones/empleados/baja/{id}', 'App\Http\Controllers\EmpleadoController@baja');
-	Route::get('/opciones/empleados/alta/{id}', 'App\Http\Controllers\EmpleadoController@alta');
-	Route::get('/obtener-departamentos', 'App\Http\Controllers\EmpleadoController@getDepartamentos');
+    //Pantalla empleados
+    Route::resource('/opciones/empleados', 'App\Http\Controllers\EmpleadoController');
+    Route::get('/obtener-empleados', 'App\Http\Controllers\EmpleadoController@getEmpleados');
+    Route::get('/opciones/empleados/baja/{id}', 'App\Http\Controllers\EmpleadoController@baja');
+    Route::get('/opciones/empleados/alta/{id}', 'App\Http\Controllers\EmpleadoController@alta');
+    Route::get('/obtener-departamentos', 'App\Http\Controllers\EmpleadoController@getDepartamentos');
 
-	//Pantalla de usuarios
-	Route::resource('/opciones/usuarios', 'App\Http\Controllers\UsuarioController');
-	Route::get('/obtener-usuarios', 'App\Http\Controllers\UsuarioController@getUsuarios');
-	Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
-	Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
+    //Pantalla de usuarios
+    Route::resource('/opciones/usuarios', 'App\Http\Controllers\UsuarioController');
+    Route::get('/obtener-usuarios', 'App\Http\Controllers\UsuarioController@getUsuarios');
+    Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
+    Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
 
-	Route::get('gestión-comercial', function () {
-		return view('gestion-comercial.index');
-	});
-	
-	//Pantalla de productos
-	Route::get('/gestión-comercial/productos/obtener-productos', 'App\Http\Controllers\ProductoController@getProductos');
-	Route::get('/gestión-comercial/productos/producto-detalle/{tipo}/{id}', 'App\Http\Controllers\ProductoController@getDetallesProducto');
-	Route::get('/gestión-comercial/productos/baja/{id}', 'App\Http\Controllers\ProductoController@baja');
-	Route::get('/gestión-comercial/productos/alta/{id}', 'App\Http\Controllers\ProductoController@alta');
-	Route::resource('/gestión-comercial/productos', 'App\Http\Controllers\ProductoController');
+    Route::get('gestión-comercial', function () {
+        return view('gestion-comercial.index');
+    });
 
-	//Pantalla ventas
-	Route::get('/gestión-comercial/ventas/pdf', 'App\Http\Controllers\VentaController@pdf');
-	Route::get('/gestión-comercial/ventas/obtener-codigo', 'App\Http\Controllers\VentaController@getIdVenta');
-	Route::get('/obtener-ventas/{tipoVenta}/{tipoCliente}', 'App\Http\Controllers\VentaController@getVentas');
-	Route::get('/gestión-comercial/ventas/obtener-productos/{query?}', 'App\Http\Controllers\VentaController@getProductos');
-	Route::get('/gestión-comercial/ventas/obtener-clientes/{query?}', 'App\Http\Controllers\VentaController@getClientes');
-	Route::get('/gestión-comercial/ventas/baja/{id}', 'App\Http\Controllers\VentaController@baja');
-	Route::get('/gestión-comercial/ventas/alta/{id}', 'App\Http\Controllers\VentaController@alta');
-	Route::resource('/gestión-comercial/ventas', 'App\Http\Controllers\VentaController');
+    //Pantalla de productos
+    Route::get('/gestión-comercial/productos/obtener-productos', 'App\Http\Controllers\ProductoController@getProductos');
+    Route::get('/gestión-comercial/productos/producto-detalle/{tipo}/{id}', 'App\Http\Controllers\ProductoController@getDetallesProducto');
+    Route::get('/gestión-comercial/productos/baja/{id}', 'App\Http\Controllers\ProductoController@baja');
+    Route::get('/gestión-comercial/productos/alta/{id}', 'App\Http\Controllers\ProductoController@alta');
+    Route::resource('/gestión-comercial/productos', 'App\Http\Controllers\ProductoController');
 
-	Route::get('billing', function () {
+    //Pantalla ventas
+    Route::get('/gestión-comercial/ventas/pdf', 'App\Http\Controllers\VentaController@pdf');
+    Route::get('/gestión-comercial/ventas/obtener-codigo', 'App\Http\Controllers\VentaController@getIdVenta');
+    Route::get('/obtener-ventas/{tipoVenta}/{tipoCliente}', 'App\Http\Controllers\VentaController@getVentas');
+    Route::get('/gestión-comercial/ventas/obtener-productos/{query?}', 'App\Http\Controllers\VentaController@getProductos');
+    Route::get('/gestión-comercial/ventas/obtener-clientes/{query?}', 'App\Http\Controllers\VentaController@getClientes');
+    Route::get('/gestión-comercial/ventas/baja/{id}', 'App\Http\Controllers\VentaController@baja');
+    Route::get('/gestión-comercial/ventas/alta/{id}', 'App\Http\Controllers\VentaController@alta');
+    Route::resource('/gestión-comercial/ventas', 'App\Http\Controllers\VentaController');
+    Route::get('/gestión-comercial/ventas/{id}/pdfFactura', 'App\Http\Controllers\VentaController@pdfFactura')->name('ventas.pdfFactura');
 
-		return view('billing');
-	})->name('billing');
+    //Cuotas
+    Route::resource('/gestión-comercial/cuotas', 'App\Http\Controllers\CuotaController');
+    Route::get('/gestión-comercial/cuota/{id}', 'App\Http\Controllers\CuotaController@show');
+    Route::get('/obtener-cuotas/{id}', 'App\Http\Controllers\CuotaController@getCuotas');
+    Route::post('/gestión-comercial/cuotas/generar-automaticas/{idVenta}', 'App\Http\Controllers\CuotaController@generarCuotasAutomaticas');
+    Route::get('/gestión-comercial/cuotas/{idVenta}', 'App\Http\Controllers\CuotaController@obtenerCuotasPorVenta');
+    Route::post('/gestión-comercial/cuotas/{idCuota}/actualizar-fecha', 'App\Http\Controllers\CuotaController@actualizarFecha');
+    Route::get('/gestión-comercial/cuotas/actualizar-estados', 'App\Http\Controllers\CuotaController@actualizarEstadoCuotas');
 
-	Route::get('profile', function () {
-		return view('profile');
-	})->name('profile');
 
-	Route::get('rtl', function () {
-		return view('rtl');
-	})->name('rtl');
+    Route::get('billing', function () {
 
-	Route::get('user-management', function () {
-		return view('laravel-examples/user-management');
-	})->name('user-management');
+        return view('billing');
+    })->name('billing');
 
-	Route::get('tables', function () {
-		return view('tables');
-	})->name('tables');
+    Route::get('profile', function () {
+        return view('profile');
+    })->name('profile');
 
-	Route::get('virtual-reality', function () {
-		return view('virtual-reality');
-	})->name('virtual-reality');
+    Route::get('rtl', function () {
+        return view('rtl');
+    })->name('rtl');
 
-	Route::get('static-sign-in', function () {
-		return view('static-sign-in');
-	})->name('sign-in');
+    Route::get('user-management', function () {
+        return view('laravel-examples/user-management');
+    })->name('user-management');
 
-	Route::get('static-sign-up', function () {
-		return view('static-sign-up');
-	})->name('sign-up');
+    Route::get('tables', function () {
+        return view('tables');
+    })->name('tables');
 
-	Route::post('/logout', 'App\Http\Controllers\LoginController@logout');
+    Route::get('virtual-reality', function () {
+        return view('virtual-reality');
+    })->name('virtual-reality');
+
+    Route::get('static-sign-in', function () {
+        return view('static-sign-in');
+    })->name('sign-in');
+
+    Route::get('static-sign-up', function () {
+        return view('static-sign-up');
+    })->name('sign-up');
+
+    Route::post('/logout', 'App\Http\Controllers\LoginController@logout');
 });
 // Route::group(['middleware' => 'guest'], function () {
 // 	Route::get('/register', [RegisterController::class, 'create']);
@@ -157,7 +169,6 @@ Route::group(['middleware' => 'auth'], function () {
 // });
 
 Route::get('login', function () {
-	return view('usuarios.login');
+    return view('usuarios.login');
 })->name('login')->middleware('guest');
 Route::post('/login', 'App\Http\Controllers\LoginController@login');
-

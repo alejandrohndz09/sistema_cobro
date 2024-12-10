@@ -326,6 +326,14 @@
                                                             <i class="fas fa-trash text-secondary"></i>
                                                         </a>
                                                     @endif
+                                                    <!-- Nuevo botón para generar factura -->
+                                                    <a role="button"
+                                                        href="{{ route('ventas.pdfFactura', $v->idVenta) }}"
+                                                        data-bs-tt="tooltip" data-bs-original-title="Generar Factura"
+                                                        class="btnGenerarFactura">
+                                                        <i class="fas fa-file-invoice text-secondary"></i>
+                                                    </a>
+
                                                 </td>
                                             </tr>
                                         @endforeach

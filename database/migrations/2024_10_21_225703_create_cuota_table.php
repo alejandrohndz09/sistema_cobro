@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cuota', function (Blueprint $table) {
             $table->string('idCuota', 6)->primary();
             $table->dateTime('fechaLimite');
-            $table->dateTime('fechaPago');
+            $table->date('fechaPago')->nullable()->change(); // Permite valores NULL
             $table->decimal('monto', 10);
             $table->decimal('mora', 10);
             $table->integer('estado');
