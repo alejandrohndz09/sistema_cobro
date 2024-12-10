@@ -28,7 +28,32 @@ class ActivoController extends Controller
         $activos = Activo::where('estado', 1)->get();
         $categorias = Categoria::where('estado', 1)->get();
 
-        return view('activos.index', compact('departamentos', 'sucursales', 'empresas', 'activos', 'categorias'));
+        $resultados = DB::table('bien')
+            ->join('activo', 'bien.idActivo', '=', 'activo.idActivo')
+            ->join('categoria', 'activo.idCategoria', '=', 'categoria.idCategoria')
+            ->select(
+                DB::raw("
+                CASE 
+                    WHEN categoria.nombre IN ('Edificación', 'Maquinaria', 'Vehiculo') THEN categoria.nombre
+                    ELSE 'Otros bienes muebles'
+                END AS categoria_agrupada,
+                SUM(bien.precio) AS total
+            ")
+            )
+            ->groupBy('categoria_agrupada')
+            ->get();
+
+        // Consulta para obtener la suma de valores agrupados por sucursal
+        $datosSucursales = DB::table('sucursal')
+            ->join('departamento', 'sucursal.idSucursal', '=', 'departamento.idSucursal')
+            ->join('bien', 'departamento.idDepartamento', '=', 'bien.idDepartamento')
+            ->select('sucursal.ubicacion as nombre', DB::raw('SUM(bien.precio) as total'))
+            ->where('bien.estado', 1) // Opcional: Filtrar bienes activos
+            ->groupBy('sucursal.ubicacion')
+            ->get();
+
+
+        return view('activos.index', compact('departamentos', 'sucursales', 'empresas', 'activos', 'categorias', 'resultados', 'datosSucursales'));
     }
 
     /**
@@ -303,6 +328,38 @@ class ActivoController extends Controller
     {
         $activos = Activo::with(['categoria', 'bienes']) // Asegúrate de tener la relación 'categoria' en tu modelo Activo
             ->get(); // Ajusta esto según tus necesidades
+
+        $datosCategorias = DB::table('bien')
+            ->join('activo', 'bien.idActivo', '=', 'activo.idActivo')
+            ->join('categoria', 'activo.idCategoria', '=', 'categoria.idCategoria')
+            ->select(
+                DB::raw("
+                CASE 
+                    WHEN categoria.nombre IN ('Edificación', 'Maquinaria', 'Vehiculo') THEN categoria.nombre
+                    ELSE 'Otros bienes muebles'
+                END AS categoria_agrupada,
+                SUM(bien.precio) AS total
+            ")
+            )
+            ->groupBy('categoria_agrupada')
+            ->get();
+
+        // Consulta para obtener la suma de valores agrupados por sucursal
+        $datosSucursales = DB::table('sucursal')
+            ->join('departamento', 'sucursal.idSucursal', '=', 'departamento.idSucursal')
+            ->join('bien', 'departamento.idDepartamento', '=', 'bien.idDepartamento')
+            ->select('sucursal.ubicacion as nombre', DB::raw('SUM(bien.precio) as total'))
+            ->where('bien.estado', 1) // Opcional: Filtrar bienes activos
+            ->groupBy('sucursal.ubicacion')
+            ->get();
+
+
+        return response()->json([
+            'activos' => $activos,
+            'datosCategorias' => $datosCategorias,
+            'datosSucursales' =>  $datosSucursales
+        ]);
+        
         return response()->json($activos);
     }
 
