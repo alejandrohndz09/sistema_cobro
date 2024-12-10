@@ -299,12 +299,12 @@
                                                 </td>
                                                 <td>
                                                     @if ($v->estado == 1)
-                                                        <a role="button" data-bs-toggle="modal"
+                                                        {{-- <a role="button" data-bs-toggle="modal"
                                                             data-bs-target="#modalForm" data-id="{{ $v->idVenta }}"
                                                             data-bs-tt="tooltip" data-bs-original-title="Editar"
                                                             class="btnEditar me-2">
                                                             <i class="fas fa-pen text-secondary"></i>
-                                                        </a>
+                                                        </a> --}}
 
                                                         <a role="button" data-bs-toggle="modal"
                                                             data-bs-target="#modalConfirm" data-id="{{ $v->idVenta }}"
