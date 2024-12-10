@@ -29,6 +29,7 @@ class Proveedor extends Model
 	protected $primaryKey = 'IdProveedor';
 	public $incrementing = false;
 	public $timestamps = false;
+	
 
 	protected $casts = [
 		'estado' => 'int'
@@ -44,6 +45,6 @@ class Proveedor extends Model
 
 	public function compras()
 	{
-		return $this->hasMany(Compra::class, 'idProveedor');
+		return $this->hasMany(Compra::class, 'IdProveedor');
 	}
 }

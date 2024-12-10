@@ -53,6 +53,13 @@ $(document).ready(function () {
     $(document).on('click', '.btnEditarE', function () {
         editarE($(this).data('id'));
     });
+
+    $('#tableBody').on('click', '.tr-link', function (e) {
+        if (!$(e.target).closest('a').length) {
+            let id = $(this).data('id');
+            window.location.href = `/opciones/departamentos/${id}`;
+        }
+    });
 });
 
 function editarE(idEmpresa) {
@@ -149,11 +156,36 @@ function mostrarDatosEmpresa() {
 }
 
 // Mostrar la imagen cargada al seleccionarla
-document.getElementById('logo').addEventListener('change', function(event) {
+document.getElementById('logo').addEventListener('change', function (event) {
     const reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
         document.getElementById('image-preview').style.backgroundImage = `url(${reader.result})`;
         document.getElementById('iconContainer').style.display = 'none'; // Oculta el ícono de cámara
     };
     reader.readAsDataURL(event.target.files[0]);
 });
+
+function validarInputNit(input) {
+    let nit = input.value;
+
+    // Eliminar caracteres no válidos (mantener solo dígitos)
+    nit = nit.replace(/[^0-9]/g, '');
+
+    // Limitar la longitud máxima a 17 caracteres sin guiones
+    nit = nit.slice(0, 14);
+
+    // Formatear con guiones según el formato 0000-000000-000-0
+    if (nit.length > 4) {
+        nit = nit.slice(0, 4) + '-' + nit.slice(4);
+    }
+    if (nit.length > 11) {
+        nit = nit.slice(0, 11) + '-' + nit.slice(11);
+    }
+    if (nit.length > 15) {
+        nit = nit.slice(0, 15) + '-' + nit.slice(15);
+    }
+
+    // Asignar el valor formateado al campo de entrada
+    input.value = nit;
+}
+

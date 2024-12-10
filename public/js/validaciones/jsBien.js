@@ -524,11 +524,6 @@ function instanscearTablaAdquisicion() {
     instanciarTooltips();
 }
 
-function setDepreciationType(type) {
-    // Establecer el tipo de depreciación en el campo oculto
-    document.getElementById('tipo').value = type;
-}
-
 // Función para generar el PDF
 function generatePDF(tipo, element) {
     // Obtener el idActivo desde el atributo data-id
