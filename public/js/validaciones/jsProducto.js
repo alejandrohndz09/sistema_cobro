@@ -102,7 +102,7 @@ $(document).ready(function () {
     $('#tableBody').on('click', '.tr-link', function (e) {
         if (!$(e.target).closest('a').length) {
             let id = $(this).data('id');
-            window.location.href = `/productos/${id}`;
+            window.location.href = `/gestión-comercial/productos/${id}`;
         }
     });
 
@@ -129,7 +129,7 @@ function agregar() {
 }
 
 function editar(idProducto) {
-    $.get('/productos/' + idProducto + '/edit', function (obj) {
+    $.get('/gestión-comercial/productos/' + idProducto + '/edit', function (obj) {
         // Limpieza de spans de error
         const errorSpans = document.querySelectorAll('span.text-danger');
         errorSpans.forEach(function (span) {
@@ -151,7 +151,7 @@ function editar(idProducto) {
 
         // Otros ajustes
         $('#method').val('PUT'); // Cambiar a PUT
-        $('#ProductoForm').attr('action', '/productos/' + idProducto);
+        $('#ProductoForm').attr('action', '/gestión-comercial/productos/' + idProducto);
         $('#modalForm').modal('show');
     });
 }
@@ -159,21 +159,21 @@ function editar(idProducto) {
 
 function eliminar(idProducto) {
     //Preparacion visual y direccion de la accion en el formulario
-    $('#confirmarForm').attr('action', '/productos/' + idProducto);
+    $('#confirmarForm').attr('action', '/gestión-comercial/productos/' + idProducto);
     $('#methodC').val('Delete')
     $('#dialogo').text('Está a punto de eliminar permanentemente el registro. ¿Desea continuar?')
 }
 
 function baja(idProducto) {
     //Preparacion visual y direccion de la accion en el formulario
-    $('#confirmarForm').attr('action', '/productos/baja/' + idProducto);
+    $('#confirmarForm').attr('action', '/gestión-comercial/productos/baja/' + idProducto);
     $('#methodC').val('get')
     $('#dialogo').text('Está a punto de deshabilitar el registro. ¿Desea continuar?')
 }
 
 function alta(idProducto) {
     $.ajax({
-        url: '/productos/alta/' + idProducto,
+        url: '/gestión-comercial/productos/alta/' + idProducto,
         method: 'get',
         success: function (response) {
             // Procesar la respuesta exitosa
@@ -199,7 +199,7 @@ function alta(idProducto) {
 }
 function mostrarDatos() {
     $.ajax({
-        url: '/obtener-productos',
+        url: '/gestión-comercial/productos/obtener-productos',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -330,7 +330,7 @@ $('.producto-row').on('click', function (event) {
 
     if (id) {
         $.ajax({
-            url: `/producto-detalle/${tipo}/${id}`, // Ruta dinámica con template literals
+            url: `/gestión-comercial/productos/producto-detalle/${tipo}/${id}`, // Ruta dinámica con template literals
             type: 'GEt',
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content'), // CSRF Token

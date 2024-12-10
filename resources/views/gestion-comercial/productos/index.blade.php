@@ -137,5 +137,5 @@
 
         </div>
     </div>
-    @include('producto.modales')
+    @include('gestion-comercial.productos.modales')
 @endsection

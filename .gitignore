@@ -3,6 +3,7 @@
 /public/storage
 /public/assets/img/empresas
 /public/assets/img/activos
+/public/assets/img/productos
 /storage/*.key
 /vendor
 .env
