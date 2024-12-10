@@ -47,7 +47,7 @@
                                 <label>NIT: *</label>
                                 <div class="input-group mb-1">
                                     <input type="text" name="nit" id="nit" class="form-control"
-                                        placeholder="NIT" autocomplete="off">
+                                        placeholder="NIT" autocomplete="off" oninput="validarInputNit(this)">
                                 </div>
                                 <span id="error-nit" class="text-danger text-xs mb-3"></span>
 
