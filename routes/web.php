@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\CuotaController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoUserController;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth'], function () {
+
 	Route::get('/', [HomeController::class, 'home']);
 	Route::get('inicio', function () {
 		return view('dashboard');
@@ -124,6 +126,17 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/gestión-comercial/ventas/baja/{id}', 'App\Http\Controllers\VentaController@baja');
 	Route::get('/gestión-comercial/ventas/alta/{id}', 'App\Http\Controllers\VentaController@alta');
 	Route::resource('/gestión-comercial/ventas', 'App\Http\Controllers\VentaController');
+  Route::get('/gestión-comercial/ventas/{id}/pdfFactura', 'App\Http\Controllers\VentaController@pdfFactura')->name('ventas.pdfFactura');
+  
+  
+  //Cuotas
+  Route::resource('/gestión-comercial/cuotas', 'App\Http\Controllers\CuotaController');
+  Route::get('/gestión-comercial/cuota/{id}', 'App\Http\Controllers\CuotaController@show');
+  Route::get('/obtener-cuotas/{id}', 'App\Http\Controllers\CuotaController@getCuotas');
+  Route::post('/gestión-comercial/cuotas/generar-automaticas/{idVenta}', 'App\Http\Controllers\CuotaController@generarCuotasAutomaticas');
+  Route::get('/gestión-comercial/cuotas/{idVenta}', 'App\Http\Controllers\CuotaController@obtenerCuotasPorVenta');
+  Route::post('/gestión-comercial/cuotas/{idCuota}/actualizar-fecha', 'App\Http\Controllers\CuotaController@actualizarFecha');
+  Route::get('/gestión-comercial/cuotas/actualizar-estados', 'App\Http\Controllers\CuotaController@actualizarEstadoCuotas');
 
 	Route::resource('/clientes', 'App\Http\Controllers\ClienteController');
 	Route::get('/obtener-listaclientes/{tipoCliente}/{tipoClasificacion}', 'App\Http\Controllers\ClienteController@obtenerClientes');
@@ -178,7 +191,6 @@ Route::group(['middleware' => 'auth'], function () {
 // });
 
 Route::get('login', function () {
-	return view('usuarios.login');
+    return view('usuarios.login');
 })->name('login')->middleware('guest');
 Route::post('/login', 'App\Http\Controllers\LoginController@login');
-
