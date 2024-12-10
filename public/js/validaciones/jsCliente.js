@@ -414,8 +414,9 @@ function mostrarDatos() {
         error: function (xhr, status, error) {
             Toast.fire({
                 icon: 'error',
-                title: xhr.responseJSON.error
+                title: xhr.responseJSON
             });
+            console.log(xhr.responseJSON);
         }
     });
 }

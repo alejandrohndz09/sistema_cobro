@@ -2,7 +2,6 @@ $(document).ready(function () {
     // Evento para enviar el formulario `#empresaForm`
     $('#empresaForm').submit(function (e) {
         e.preventDefault();
-
         let form = $(this);
         let url = form.attr('action');
 
@@ -40,6 +39,7 @@ $(document).ready(function () {
                         $('#error-' + key).text(error[0]);
                     });
                 } else {
+                    console.log(xhr.responseJSON);
                     Toast.fire({
                         icon: 'error',
                         title: 'Ocurrió un error. Por favor, inténtelo de nuevo.'
@@ -75,6 +75,7 @@ function editarE(idEmpresa) {
 
         // Verifica si existe un logo antes de intentar cargarlo
         if (empresa.logo) {
+            
             $('#image-preview').css('background-image', 'url(/' + empresa.logo + ')');
             $('#image-preview').css('background-size', 'cover');
             $('#image-preview').css('background-position', 'center');

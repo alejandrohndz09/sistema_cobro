@@ -197,6 +197,7 @@ function alta(idProducto) {
         }
     });
 }
+
 function mostrarDatos() {
     $.ajax({
         url: '/gestión-comercial/productos/obtener-productos',
@@ -244,6 +245,8 @@ function mostrarDatos() {
 
                 // Crear la fila de la tabla
                 const tr = document.createElement('tr');
+                tr.setAttribute('data-id', c.idProducto);
+                tr.classList.add('tr-link'); // Clase de la fila<<
                 tr.innerHTML = `
                         <td>
                             ${imagen}

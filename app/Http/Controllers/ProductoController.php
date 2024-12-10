@@ -139,7 +139,7 @@ class ProductoController extends Controller
         $producto->stockMinimo = $request->post('stockMinimo');
         if ($request->hasFile('imagen')) {
             //primero eliminamos la anterior imagen
-            $filePath = public_path('/assets/img/activos/' . $producto->imagen);
+            $filePath = public_path('/assets/img/productos/' . $producto->imagen);
             if (file_exists($filePath)) {
                 unlink($filePath);
             }
@@ -171,7 +171,13 @@ class ProductoController extends Controller
     {
         $producto = Producto::find($id);
         if ($producto->detalle_ventas || $producto->detalle_compras === 0) {
+             //primero eliminamos la anterior imagen
+             $filePath = public_path('/assets/img/productos/' . $producto->imagen);
+             if (file_exists($filePath)) {
+                 unlink($filePath);
+             }
             $producto->delete();
+            
             $alert = array(
                 'type' => 'success',
                 'message' => 'El registro se ha eliminado exitosamente'
