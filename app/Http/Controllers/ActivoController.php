@@ -25,10 +25,44 @@ class ActivoController extends Controller
         $sucursales = Sucursal::where('estado', 1)->get();
         $departamentos = Departamento::where('estado', 1)->get();
         $empresas = Empresa::where('estado', 1)->get();
-        $activos = Activo::where('estado', 1)->get();
+        $activos = Activo::all();
         $categorias = Categoria::where('estado', 1)->get();
 
-        return view('activos.index', compact('departamentos', 'sucursales', 'empresas', 'activos', 'categorias'));
+        //ENVIO DE CONSULTA DE CATEGORIAS
+        $categorias = Categoria::with('activos.bienes')->get();
+
+        // Dividir las primeras tres categorías y las demás
+        $resultados = $categorias->take(3)->map(function ($categoria) {
+            return [
+                'nombre' => $categoria->nombre, // Suponiendo que tienes una columna `nombre`
+                'valorAcumulado' => $categoria->obtenerValorAcumulado(),
+            ];
+        });
+
+        // Calcular el total de las categorías restantes
+        $otrosValorAcumulado = $categorias->skip(3)->reduce(function ($carry, $categoria) {
+            return $carry + $categoria->obtenerValorAcumulado();
+        }, 0);
+
+        // Agregar el registro de "Otros bienes" si hay valores acumulados
+        if ($otrosValorAcumulado > 0) {
+            $resultados->push([
+                'nombre' => 'Otros bienes',
+                'valorAcumulado' => $otrosValorAcumulado,
+            ]);
+        }
+
+        // Consulta para obtener la suma de valores agrupados por sucursal
+        $datosSucursales = DB::table('sucursal')
+            ->join('departamento', 'sucursal.idSucursal', '=', 'departamento.idSucursal')
+            ->join('bien', 'departamento.idDepartamento', '=', 'bien.idDepartamento')
+            ->select('sucursal.ubicacion as nombre', DB::raw('SUM(bien.precio) as total'))
+            ->where('bien.estado', 1) // Opcional: Filtrar bienes activos
+            ->groupBy('sucursal.ubicacion')
+            ->get();
+
+
+        return view('activos.index', compact('departamentos', 'sucursales', 'empresas', 'activos', 'categorias', 'resultados', 'datosSucursales'));
     }
 
     /**
@@ -210,7 +244,7 @@ class ActivoController extends Controller
     public function destroy($id)
     {
         $activo = Activo::find($id);
-        if ($activo->bienes === null) {
+        if ($activo->bienes == null) {
             $activo->delete();
             if (file_exists(public_path('/assets/img/activos/' . $activo->imagen))) {
                 unlink(public_path('/assets/img/activos/' . $activo->imagen)); // Eliminar imagen
@@ -301,8 +335,60 @@ class ActivoController extends Controller
 
     public function getActivos()
     {
+
+        //ENVIO DE ACTIVOS
         $activos = Activo::with(['categoria', 'bienes']) // Asegúrate de tener la relación 'categoria' en tu modelo Activo
             ->get(); // Ajusta esto según tus necesidades
+
+        foreach ($activos as $activo) {
+            $valorActual = $activo->obtenerValorAcumulado();
+            $activo->valorAcumulado = $valorActual; // Si el valor es negativo, asignar 0
+        }
+
+        //ENVIO DE CONSULTA DE CATEGORIAS
+        
+        $categorias = Categoria::with('activos.bienes')->get();
+
+        // Dividir las primeras tres categorías y las demás
+        $datosCategorias = $categorias->take(3)->map(function ($categoria) {
+            return [
+                'nombre' => $categoria->nombre, // Suponiendo que tienes una columna `nombre`
+                'valorAcumulado' => $categoria->obtenerValorAcumulado(),
+            ];
+        });
+
+        // Calcular el total de las categorías restantes
+        $otrosValorAcumulado = $categorias->skip(3)->reduce(function ($carry, $categoria) {
+            return $carry + $categoria->obtenerValorAcumulado();
+        }, 0);
+
+        // Agregar el registro de "Otros bienes" si hay valores acumulados
+        if ($otrosValorAcumulado > 0) {
+            $datosCategorias->push([
+                'nombre' => 'Otros bienes',
+                'valorAcumulado' => $otrosValorAcumulado,
+            ]);
+        }
+        
+
+
+        //ENVIO DE CONSULTA DE SUCURSALES
+
+        $datosSucursales = DB::table('sucursal')
+            ->join('departamento', 'sucursal.idSucursal', '=', 'departamento.idSucursal')
+            ->join('bien', 'departamento.idDepartamento', '=', 'bien.idDepartamento')
+            ->select('sucursal.ubicacion as nombre', DB::raw('SUM(bien.precio) as total'))
+            ->where('bien.estado', 1) // Opcional: Filtrar bienes activos
+            ->groupBy('sucursal.ubicacion')
+            ->get();
+
+
+        return response()->json([
+            'activos' => $activos,
+            'datosCategorias' => $datosCategorias,
+            'datosSucursales' =>  $datosSucursales
+        ]);
+
         return response()->json($activos);
     }
 

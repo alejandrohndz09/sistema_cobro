@@ -1,8 +1,8 @@
 var detalles = [];
 var productoSeleccionado = null;
-
+var liProductoSel = null;
 $(document).ready(function () {
-    itemsPerPage = 8;
+    itemsPerPage = 10;
     updatePagination();
     //----ACCIONES EN VISTA PRINCIPAL ----
     $('#ventaForm').submit(function (e) {
@@ -12,7 +12,7 @@ $(document).ready(function () {
         // for (const [key, value] of formData.entries()) {
         //     console.log(`${key}:`, value);
         // }
-        
+
         detalles.forEach((detalle, index) => {
             formData.append(`detalles[${index}][idProducto]`, detalle.idProducto);
             formData.append(`detalles[${index}][producto]`, detalle.producto);
@@ -20,7 +20,7 @@ $(document).ready(function () {
             formData.append(`detalles[${index}][precioVenta]`, detalle.precioVenta);
             formData.append(`detalles[${index}][subTotal]`, detalle.subTotal);
         });
-        
+
         $.ajax({
             url: url,
             method: 'post',
@@ -52,7 +52,7 @@ $(document).ready(function () {
                     console.log(errors);
                     $.each(errors, function (key, error) {
 
-                        if (key.startsWith('detalles.')) {                           
+                        if (key.startsWith('detalles.')) {
                             $('#error-detalles').text(error[0]); // Muestra el error en el span correspondiente
 
                         } else {
@@ -141,6 +141,35 @@ $(document).ready(function () {
     });
 
     //----ACCIONES EN EL MODAL ----
+    $('#tipo').change(function (e) {
+        e.preventDefault();
+
+        // Mostrar u ocultar detalles específicos del crédito
+        if ($(this).val() == 'Crédito') {
+            $('.detalles-credito').show();
+            let plazo = parseInt($('#plazo').val());
+            $('#cuota').show();
+            $('#cuota').text(`Será pagado en ${plazo} cuotas con un valor de $0.00`);
+        } else {
+            $('.detalles-credito').hide();
+            $('#cuota').hide();
+        }
+
+        // Si un producto está seleccionado, actualiza su precio temporalmente
+        if (productoSeleccionado) {
+            let precio = $('#tipo').val() == 'Crédito' ? calcularCuotas(liProductoSel.data('producto').precioVenta).totalPagar :
+                liProductoSel.data('producto').precioVenta;
+            $("#precioVenta").text('$' + precio);
+            $('#error-producto').text('');
+            $('#error-cantidad').text('');
+            productoSeleccionado.precioVenta = precio;
+
+        }
+
+        // Si existen detalles en la tabla, actualiza sus precios
+        actualizarDetalles();
+    });
+
     $(document).on('click', '#btnAgregarDet', function (e) {
         e.preventDefault();
         let productoInput = $('#producto').val().trim();
@@ -177,48 +206,20 @@ $(document).ready(function () {
                 idProducto: productoSeleccionado.idProducto,
                 producto: productoSeleccionado.idProducto + ' - ' + productoSeleccionado.nombre,
                 cantidad: cantidad,
-                precioVenta: parseFloat(productoSeleccionado.precioVenta),
+                precioVenta: parseFloat(productoSeleccionado.precioVenta).toFixed(2),
+                precioVentaOriginal: parseFloat(liProductoSel.data('producto').precioVenta).toFixed(2),
                 subTotal: cantidad * parseFloat(productoSeleccionado.precioVenta)
             };
 
-
-            // Añadir la fila a la tabla
-            let newRowId = $('#tableBodyDetalle tr').length + 1;
-            let subtotal = detalle.subTotal;
-
-            let newRow = `
-            <tr id="row-${newRowId}">
-                <td class="col-5">
-                    <p class="text-sm mb-0" id="producto-${newRowId}">${detalle.producto}</p>
-                </td>
-                <td class="ps-4 col-1">
-                    <p class="text-sm mb-0" id="cantidad-${newRowId}">${detalle.cantidad}</p>
-                </td>
-                <td class="ps-4 col-2">
-                    <p class="text-sm mb-0" id="precioUnitario-${newRowId}">$${detalle.precioVenta.toFixed(2)}</p>
-                </td>
-                <td class="ps-4 col-2">
-                    <p class="text-sm text-dark mb-0" id="subtotal-${newRowId}">$${subtotal.toFixed(2)}</p>
-                </td>
-                <td>
-                    <a role="button" data-bs-tt="tooltip" data-bs-original-title="Eliminar" class="btnEliminarDet me-2">
-                        <i class="fas fa-minus text-danger"></i>
-                    </a>
-                </td>
-            </tr>
-            `;
-
-            // Añadir la nueva fila al cuerpo de la tabla
-            $('#tableBodyDetalle').append(newRow);
-            // Reiniciar la variable producto
-            productoSeleccionado = null;
             // Introducimos el detalle al arreglo global `detalles`
             detalles.push(detalle);
-            // Actualizar los totales
-            actualizarTotales();
-
+            mostrarDetallesEnTabla();
+            // Reiniciar la variable producto
+            productoSeleccionado = null;
+            liProductoSel = null;
 
             // Limpiar los campos después de agregar el detalle
+            // $('#plazo, #tipo').prop('disabled', true);
             $('#producto').val('');
             $('#cantidad').val('');
             $('#dropdown-producto').empty();
@@ -237,21 +238,42 @@ $(document).ready(function () {
 
         actualizarTotales();
     });
-    //Eventos del dropdown
-    $('#cliente').keyup(function (e) {
-        llenarClientes($(this).val().trim());
+
+    $(document).on('keyup focus', '#cliente, #producto', function () {
+        // Obtén el valor del campo actual y su id
+        let valor = $(this).val().trim();
+        let id = $(this).attr('id');
+
+        // Llama a la función correspondiente según el id
+        if (id === 'cliente') {
+            llenarClientes(valor);
+        } else if (id === 'producto') {
+            llenarProductos(valor);
+        }
     });
 
-    $('#cliente').focus(function () {
-        llenarClientes($(this).val().trim());
-    });
+    $(document).on('keyup', '#plazo', function (e) {
+        if (productoSeleccionado) {
+            // Accede al precio original desde liProductoSel
+            let precioOriginal = liProductoSel.data('producto').precioVenta;
 
-    $('#producto').keyup(function (e) {
-        llenarProductos($(this).val().trim());
-    });
+            // Calcula los datos del crédito
+            let datosCredito = calcularCuotas(precioOriginal);
 
-    $('#producto').focus(function () {
-        llenarProductos($(this).val().trim());
+            // Actualiza la interfaz con los nuevos valores
+            $("#precioVenta").text('$' + datosCredito.totalPagar);
+            $('#error-producto').text('');
+            $('#error-cantidad').text('');
+
+            // Actualiza el precio en productoSeleccionado
+            productoSeleccionado.precioVenta = datosCredito.totalPagar;
+
+        }
+        let plazo = $(this).val()==''?'':parseInt($(this).val());
+        $('#cuota').show();
+        $('#cuota').text(`Será pagado en ${plazo} cuotas con un valor de $0.00`);
+        actualizarDetalles(true)
+
     });
     // Al hacer clic en un resultado del dropdown, se establece el valor el input correspondiente
     $(document).on('click', '.dropdown-results li', function () {
@@ -262,18 +284,34 @@ $(document).ready(function () {
         //otros cambios visibles
         if (inputId == "#producto") {//Si es el drop de producto
             $(".detalles-prod").show();
-            $("#precioVenta").text('$' + $(this).data('producto').precioVenta);
-            $("#stockTotal").text($(this).data('producto').stockTotal);
-            $('#error-producto').text('');
-            $('#error-cantidad').text('');
-            productoSeleccionado = {
-                idProducto: $(this).data('producto').idProducto,
-                nombre: $(this).data('producto').nombre,
-                precioVenta: $(this).data('producto').precioVenta,
-                stockTotal: $(this).data('producto').stockTotal
-            }
-        } else {//Si es el drop de cliente
+            liProductoSel = $(this);
+            if ($('#tipo').val() == 'Crédito') {
+                let datosCredito = calcularCuotas(parseFloat($(this).data('producto').precioVenta));
+                $("#precioVenta").text('$' + datosCredito.totalPagar);
+                $("#stockTotal").text($(this).data('producto').stockTotal);
+                $('#error-producto').text('');
+                $('#error-cantidad').text('');
+                productoSeleccionado = {
+                    idProducto: $(this).data('producto').idProducto,
+                    nombre: $(this).data('producto').nombre,
+                    precioVenta: datosCredito.totalPagar,
+                    stockTotal: $(this).data('producto').stockTotal
+                }
 
+            } else {
+                $("#precioVenta").text('$' + $(this).data('producto').precioVenta);
+                $("#stockTotal").text($(this).data('producto').stockTotal);
+                $('#error-producto').text('');
+                $('#error-cantidad').text('');
+                productoSeleccionado = {
+                    idProducto: $(this).data('producto').idProducto,
+                    nombre: $(this).data('producto').nombre,
+                    precioVenta: $(this).data('producto').precioVenta,
+                    stockTotal: $(this).data('producto').stockTotal
+                }
+            }
+
+        } else {//Si es el drop de cliente
             $('#idCliente').val($(this).data('idcliente'));
             $('#producto, #cantidad, #btnAgregarDet').prop('disabled', false);
             $('#error-cliente').text('');
@@ -292,11 +330,55 @@ $(document).ready(function () {
             if (!$('#idCliente').val().trim()) {
                 $('#producto, #cantidad, #btnAgregarDet').prop('disabled', true);
                 $('#cliente').val('');
+            } else if (!$('#producto').val()) {
+                $('#producto').val('');
+                $(".detalles-prod").hide();
+
             }
         }
     });
 });
 
+function actualizarDetalles(isPlazoEvent) {
+    if (detalles.length > 0) {
+        detalles.forEach(detalle => {
+            // Recalcular precioVenta usando precioVentaOriginal
+            detalle.precioVenta = $('#tipo').val() == 'Crédito'
+                ? calcularCuotas(detalle.precioVentaOriginal).totalPagar
+                : detalle.precioVentaOriginal;
+            // Recalcular subtotal
+            detalle.subTotal = detalle.cantidad * detalle.precioVenta;
+        });
+
+        // Redibujar los detalles actualizados en la tabla
+        mostrarDetallesEnTabla();
+    }
+}
+
+function calcularCuotas(capital) {
+    console.log(capital);
+    let plazo = $('#plazo').val() == '' ? 0 : parseInt($('#plazo').val());
+    if (plazo == 0) {
+        return {
+            cuotaMensual: 0.00,
+            totalPagar: 0.00
+        }
+    }
+    // Calcular la tasa mensual dividiendo la anual entre 12
+    const tasaMensual = 0.10 / 12;
+
+    // Fórmula del pago fijo: cuota = (P * r) / (1 - (1 + r)^-n)
+    const cuotaMensual = (capital * tasaMensual) / (1 - Math.pow(1 + tasaMensual, -plazo));
+
+    // Total a pagar es la cuota mensual multiplicada por el plazo
+    const totalPagar = cuotaMensual * plazo;
+
+    // Retornar los valores
+    return {
+        cuotaMensual: cuotaMensual.toFixed(2),
+        totalPagar: totalPagar.toFixed(2),
+    };
+}
 
 function actualizarTotales() {
     let total = 0;
@@ -308,17 +390,60 @@ function actualizarTotales() {
         total += detalle.subTotal;
     });
 
-    iva = total * 0.14; // 14% de IVA
+    iva = total * 0.13; // 13% de IVA
     totalVenta = total + iva;
 
     // Mostrar los totales actualizados
     $('#total').text('$' + total.toFixed(2));
     $('#iva').text('$' + iva.toFixed(2));
     $('#totalVenta').text('$' + totalVenta.toFixed(2));
+    if ($('#tipo').val() == 'Crédito') {
+        let plazo = parseInt($('#plazo').val());
+        $('#cuota').text(`Será pagado en ${plazo} cuotas con un valor de $${(totalVenta / plazo).toFixed(2)}`);
+    }
+}
+
+function mostrarDetallesEnTabla() {
+    // Limpiar el cuerpo de la tabla antes de redibujar
+    $('#tableBodyDetalle').empty();
+
+    // Recorrer el arreglo de detalles y generar filas
+    detalles.forEach((detalle, index) => {
+        let rowId = index + 1; // Index para generar un id único por fila
+        let filaHTML = `
+            <tr id="row-${rowId}">
+                <td class="col-5">
+                    <p class="text-sm mb-0" id="producto-${rowId}">${detalle.producto}</p>
+                </td>
+                <td class="ps-4 col-1">
+                    <p class="text-sm mb-0" id="cantidad-${rowId}">${detalle.cantidad}</p>
+                </td>
+                <td class="ps-4 col-2">
+                    <p class="text-sm mb-0" id="precioUnitario-${rowId}">$${detalle.precioVenta}</p>
+                </td>
+                <td class="ps-4 col-2">
+                    <p class="text-sm text-dark mb-0" id="subtotal-${rowId}">$${detalle.subTotal.toFixed(2)}</p>
+                </td>
+                <td>
+                    <a role="button" data-bs-tt="tooltip" data-bs-original-title="Eliminar" class="btnEliminarDet me-2">
+                        <i class="fas fa-minus text-danger"></i>
+                    </a>
+                </td>
+            </tr>
+        `;
+
+        // Añadir la fila al cuerpo de la tabla
+        $('#tableBodyDetalle').append(filaHTML);
+    });
+
+    // Actualizar los totales después de mostrar
+    actualizarTotales();
 }
 
 function llenarClientes(query) {
     $('#idCliente').val('');
+    $('#error-cliente').text('');
+    $('#error-idCliente').text('');
     $('#producto, #cantidad, #btnAgregarDet').prop('disabled', true);
 
     if (!query || query.length >= 1) {
@@ -353,6 +478,7 @@ function llenarClientes(query) {
 }
 
 function llenarProductos(query) {
+    $('#error-producto').text('');
     if (!query || query.length >= 1) {
         // Mostrar el mensaje de carga mientras se realiza la petición
         $('#dropdown-producto').empty().show().append(
@@ -432,6 +558,8 @@ function agregar() {
     });
     detalles = [];
     productoSeleccionado = null;
+    liProductoSel = $(this);
+
     //Preparación de formulario
     $('.dropdown-results').empty().hide();
     $('#titulo').text("Nueva Venta");
@@ -445,9 +573,13 @@ function agregar() {
     $('#precioVenta').val('');
     $('#cantidad').val('');
     $('#tableBodyDetalle').empty();
+    $('#plazo').val('3');
+    $('.detalles-credito').hide();
     $('#total').text('$0.00');
     $('#iva').text('$0.00');
     $('#totalVenta').text('$0.00');
+    $('#cuota').hide();
+
     //otros
     $('#method').val('POST'); // Cambiar a POST
     $('#ventaForm').attr('action', '');
@@ -456,21 +588,21 @@ function agregar() {
 
 function eliminar(idVenta) {
     //Preparacion visual y direccion de la accion en el formulario
-    $('#confirmarForm').attr('action', '/ventas/' + idVenta);
+    $('#confirmarForm').attr('action', '/gestión-comercial/ventas/' + idVenta);
     $('#methodC').val('Delete')
     $('#dialogo').text('Está a punto de eliminar permanentemente el registro. ¿Desea continuar?')
 }
 
 function baja(idVenta) {
     //Preparacion visual y direccion de la accion en el formulario
-    $('#confirmarForm').attr('action', '/ventas/baja/' + idVenta);
+    $('#confirmarForm').attr('action', '/gestión-comercial/ventas/baja/' + idVenta);
     $('#methodC').val('get')
     $('#dialogo').text('Está a punto de deshabilitar el registro. ¿Desea continuar?')
 }
 
 function alta(idVenta) {
     $.ajax({
-        url: '/ventas/alta/' + idVenta,
+        url: '/gestión-comercial/ventas/alta/' + idVenta,
         method: 'get',
         success: function (response) {
             // Procesar la respuesta exitosa
@@ -512,9 +644,7 @@ function mostrarDatos() {
                 let acciones;
                 if (a.estado == 1) {
                     acciones = `
-                        <a role="button" data-bs-toggle="modal" data-bs-target="#modalForm" data-id="${a.idVenta}" data-bs-tt="tooltip" data-bs-original-title="Editar" class="btnEditar me-2">
-                            <i class="fas fa-pen text-secondary"></i>
-                        </a>
+
                         <a role="button" data-bs-toggle="modal" data-bs-target="#modalConfirm" data-id="${a.idVenta}" data-bs-tt="tooltip" data-bs-original-title="Deshabilitar" class="btnDeshabilitar">
                             <i class="fas fa-minus-circle text-secondary"></i>
                         </a>
@@ -540,7 +670,7 @@ function mostrarDatos() {
                     second: '2-digit',
                     hour12: true // Asegura el formato de 12 horas
                 });
-                
+
                 // Insertar contenido HTML en la fila
                 tr.innerHTML = `
                 <tr class="tr-link" data-id="${a.idVenta}">
@@ -577,7 +707,7 @@ function mostrarDatos() {
                     </td>
                     <td class="px-1 text-xs">
                         <span class="badge badge-xs opacity-7 bg-${a.estado == 1 ? 'success' : 'secondary'}">
-                            ${a.estado == 1 ? 'activa' : 'inactiva'}
+                            ${a.estado == 1 ? 'Realizada' : 'Pendiente'}
                         </span>
                     </td>
                     <td>

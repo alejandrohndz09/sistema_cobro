@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Venta;
 use App\Models\ClienteJuridico;
 use App\Models\ClienteNatural;
+use App\Models\Cuota;
 use App\Models\Sucursal;
 use App\Models\Empresa;
 use App\Models\Departamento;
@@ -52,7 +53,7 @@ class VentaController extends Controller
                 },
             ],
             'tipo' => 'required|in:Crédito,Contado',
-            'meses' => 'required_if:tipo,Crédito|integer|min:1',
+            'plazo' => 'required_if:tipo,Crédito|nullable|integer|min:1',
             'detalles' => 'required|array|min:1',
             'detalles.*.idProducto' => [
                 'required',
@@ -103,7 +104,7 @@ class VentaController extends Controller
                 $detalle['idDetalleVenta'] = uniqid();
             }
 
-            $iva = $subtotal * 0.14;
+            $iva = $subtotal * 0.13;
             $total = $subtotal + $iva;
 
             // Insertar en la tabla `venta`
@@ -119,7 +120,7 @@ class VentaController extends Controller
                 'idEmpleado' => Auth::user()->idEmpleado,
                 'idCliente_juridico' => DB::table('cliente_juridico')->where('idClienteJuridico', $request->idCliente)->exists() ? $request->idCliente : null,
                 'idCliente_natural' => DB::table('cliente_natural')->where('idCliente_natural', $request->idCliente)->exists() ? $request->idCliente : null,
-                'estado' => 1,
+                'estado' => $request->tipo === 'Crédito' ? 0 : 1,
             ]);
 
             // Crear un array para almacenar los detalles
@@ -209,21 +210,12 @@ class VentaController extends Controller
     public function destroy($id)
     {
         $venta = Venta::find($id);
-        if ($venta->bienes === null) {
-            $venta->delete();
-            if (file_exists(public_path('/assets/img/ventas/' . $venta->imagen))) {
-                unlink(public_path('/assets/img/ventas/' . $venta->imagen)); // Eliminar imagen
-            }
-            $alert = array(
-                'type' => 'success',
-                'message' => 'El registro se ha eliminado exitosamente'
-            );
-        } else {
-            $alert = array(
-                'type' => 'error',
-                'message' => 'No se puede eliminar el registro porque tiene datos asociados'
-            );
-        }
+        $venta->delete();
+        $alert = array(
+            'type' => 'success',
+            'message' => 'El registro se ha eliminado exitosamente'
+        );
+
 
         return response()->json($alert);
     }
@@ -386,7 +378,7 @@ class VentaController extends Controller
             'nombre',
             'estado',
             DB::raw('(
-                    (SELECT IFNULL(SUM(dc.cantidad), 0) FROM detalle_compra dc WHERE dc.idProducto = producto.idProducto) - 
+                    (SELECT IFNULL(SUM(dc.cantidad), 0) FROM detalle_compra dc WHERE dc.idProducto = producto.idProducto) -
                      (SELECT IFNULL(SUM(dv.cantidad), 0) FROM detalle_venta dv WHERE dv.idProducto = producto.idProducto)
                      ) AS stockTotal'),
             DB::raw('ROUND((
@@ -413,7 +405,8 @@ class VentaController extends Controller
         return response()->json($productos);
     }
 
-    public function getIdVenta(){
+    public function getIdVenta()
+    {
         return response()->json($this->generarId());
     }
     public function pdf(Request $request)
@@ -480,5 +473,108 @@ class VentaController extends Controller
                 'pdf' => $pdfBase64,
             ]);
         }
+    }
+
+    // public function pdfFactura($idVenta)
+    // {
+    //     // Obtener la venta con el cliente relacionado
+    //     $venta = Venta::with(['cliente_natural', 'cliente_juridico'])->findOrFail($idVenta);
+
+    //     // Obtener los detalles de la venta
+    //     $detalles = DetalleVenta::where('idVenta', $idVenta)
+    //         ->with('producto') // Cargar relación con producto
+    //         ->get();
+
+    //     // Calcular precio de venta y subtotal
+    //     foreach ($detalles as $detalle) {
+    //         $totalCompra = DB::table('detalle_compra')
+    //             ->where('idProducto', $detalle->idProducto)
+    //             ->sum(DB::raw('precio * cantidad'));
+
+    //         $totalCantidad = DB::table('detalle_compra')
+    //             ->where('idProducto', $detalle->idProducto)
+    //             ->sum('cantidad');
+
+    //         $detalle->precioVenta = round(($totalCompra / ($totalCantidad ?: 1)) * 1.10, 2);
+    //         $detalle->subtotal = $detalle->precioVenta * $detalle->cantidad;
+    //     }
+
+    //     // Verificar si la venta es a crédito
+    //     $numeroCuotas = $venta->tipo == 1 ? $venta->meses : 0;
+
+    //     // Calcular IVA (13%)
+    //     $iva = round($venta->total * 0.13, 2);
+
+    //     // Calcular Total con IVA
+    //     $totalConIva = round($venta->total + $iva, 2);
+
+    //     // Obtener la empresa
+    //     $empresa = Empresa::first();
+
+    //     // Generar el PDF
+    //     $pdf = PDF::loadView('gestion-comercial.ventas.factura', compact('venta', 'detalles', 'empresa', 'iva', 'totalConIva', 'numeroCuotas'));
+
+    //     // Descargar el PDF
+    //     return $pdf->download('Factura-Venta-' . $venta->idVenta . '.pdf');
+    // }
+
+    public function pdfFactura($idVenta)
+    {
+        // Obtener la venta con el cliente relacionado
+        $venta = Venta::with(['cliente_natural', 'cliente_juridico'])->findOrFail($idVenta);
+
+        // Obtener los detalles de la venta
+        $detalles = DetalleVenta::where('idVenta', $idVenta)
+            ->with('producto') // Cargar relación con producto
+            ->get();
+
+        // Calcular precio de venta y subtotal
+        foreach ($detalles as $detalle) {
+            $totalCompra = DB::table('detalle_compra')
+                ->where('idProducto', $detalle->idProducto)
+                ->sum(DB::raw('precio * cantidad'));
+
+            $totalCantidad = DB::table('detalle_compra')
+                ->where('idProducto', $detalle->idProducto)
+                ->sum('cantidad');
+
+            $detalle->precioVenta = round(($totalCompra / ($totalCantidad ?: 1)) * 1.10, 2);
+            $detalle->subtotal = round($detalle->precioVenta * $detalle->cantidad, 2);
+        }
+
+        // Calcular el total sin IVA
+        $totalSinIva = $detalles->sum('subtotal'); // Aquí se define correctamente
+
+        // Calcular IVA (13%)
+        $iva = round($totalSinIva * 0.13, 2);
+
+        // Calcular Total con IVA
+        $totalConIva = round($totalSinIva + $iva, 2);
+
+        // Calcular el número de cuotas
+        $ultimaFechaCuota = Cuota::where('idVenta', $idVenta)->max('fechaLimite');
+        $numeroCuotas = 0;
+        if ($ultimaFechaCuota) {
+            $fechaInicio = \Carbon\Carbon::parse($venta->fecha);
+            $fechaFin = \Carbon\Carbon::parse($ultimaFechaCuota);
+            $numeroCuotas = $fechaInicio->diffInMonths($fechaFin) + 1;
+        }
+
+        // Obtener la empresa
+        $empresa = Empresa::first();
+
+        // Generar el PDF
+        $pdf = PDF::loadView('gestion-comercial.ventas.factura', compact(
+            'venta',
+            'detalles',
+            'empresa',
+            'iva',
+            'totalConIva',
+            'numeroCuotas',
+            'totalSinIva' // Asegurarse de pasar esta variable
+        ));
+
+        // Descargar el PDF
+        return $pdf->download('Factura-Venta-' . $venta->idVenta . '.pdf');
     }
 }
