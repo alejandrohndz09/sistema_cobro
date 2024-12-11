@@ -132,6 +132,8 @@ Route::resource('/gestión-comercial/productos/proveedores', 'App\Http\Controlle
 	Route::get('/gestión-comercial/ventas/baja/{id}', 'App\Http\Controllers\VentaController@baja');
 	Route::get('/gestión-comercial/ventas/alta/{id}', 'App\Http\Controllers\VentaController@alta');
 	Route::resource('/gestión-comercial/ventas', 'App\Http\Controllers\VentaController');
+	Route::get('/gestión-comercial/obtener-producto/{id}', 'App\Http\Controllers\VentaController@ObtenerProducto');
+
   Route::get('/gestión-comercial/ventas/{id}/pdfFactura', 'App\Http\Controllers\VentaController@pdfFactura')->name('ventas.pdfFactura');
   
   
