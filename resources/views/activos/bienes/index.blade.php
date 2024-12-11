@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-fluid ">
         <div class="row">
-            <div class="col-lg-9">
+            <div class="col-lg-12">
                 <div class="col-md-12 mb-4">
                     <div class="card">
                         <div class="card-body p-3">
@@ -224,7 +224,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3">
+            {{-- <div class="col-lg-3">
                 <div class="row mx-1 dropdown">
                     <a href="#" class="btn bg-gradient-dark dropdown-toggle text text-transform-none border-radius-lg"
                         data-bs-toggle="dropdown" id="navbarDropdownMenuLink2">
@@ -260,7 +260,7 @@
                 </div>
                 
 
-                <div class="card">
+            <div class="card">
                     <div class="card-header pb-0 p-3">
                         <div class="row d-flex align-items-center">
 
@@ -317,7 +317,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     @include('activos.bienes.modales')

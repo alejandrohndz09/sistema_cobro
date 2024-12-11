@@ -93,9 +93,10 @@ class EmpresaController extends Controller
             // Procesar y guardar la nueva imagen
             $file = $request->file('logo');
             $filename = time() . '_' . $file->getClientOriginalName(); // Genera un nombre único
-            $filePath = 'assets/img/empresas/' . $filename;
+            $filenameFormat = str_replace(' ', '_',$filename);
+            $filePath = 'assets/img/empresas/' . $filenameFormat;
 
-            $file->move(public_path('assets/img/empresas'), $filename);
+            $file->move(public_path('assets/img/empresas'), $filenameFormat);
             $empresa->logo = $filePath; // Guarda la nueva ruta en la base de datos
         }
 

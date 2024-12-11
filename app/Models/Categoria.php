@@ -43,4 +43,16 @@ class Categoria extends Model
 	{
 		return $this->hasMany(Activo::class, 'idCategoria');
 	}
+
+	public function obtenerValorAcumulado()
+    {
+        // Iterar sobre los activos y sumar sus valores acumulados
+        return $this->activos->reduce(function ($carry, $activo) {
+            if ($activo->estado === 1) { // Filtrar activos con estado 1
+                $valorActual = $activo->obtenerValorAcumulado(); // Este valor ya es un número
+                return $carry + $valorActual;
+            }
+            return $carry; // No sumamos si el estado no es 1
+        }, 0);
+    }
 }

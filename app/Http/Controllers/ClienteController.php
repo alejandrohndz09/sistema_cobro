@@ -493,7 +493,7 @@ class ClienteController extends Controller
         };
 
         // Llamar al procedimiento almacenado con ambos parámetros
-        $clientes = DB::select('CALL ClasificarClientes(?, ?)', [$tipoClasificacionDB, $tipoClienteDB]);
+        $clientes = DB::select('CALL ClasificarClientes(?, ?)', [$tipoClienteDB, $tipoClasificacionDB]);
 
         // Retornar los datos en formato JSON
         return response()->json($clientes);
