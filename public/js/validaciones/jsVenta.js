@@ -2,7 +2,7 @@ var detalles = [];
 var productoSeleccionado = null;
 var liProductoSel = null;
 $(document).ready(function () {
-    itemsPerPage = 8;
+    itemsPerPage = 10;
     updatePagination();
     //----ACCIONES EN VISTA PRINCIPAL ----
     $('#ventaForm').submit(function (e) {

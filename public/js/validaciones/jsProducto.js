@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    itemsPerPage = 8;
+    updatePagination();
     $('#ProductoForm').submit(function (e) {
         e.preventDefault();
         let form = $(this);
