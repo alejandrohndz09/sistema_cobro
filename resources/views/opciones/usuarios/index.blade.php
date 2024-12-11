@@ -31,6 +31,7 @@
                                         <tr>
                                             <th class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Usuario</th>
                                             <th class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Usuario</th>
+                                            <th class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Correo</th>
                                             <th class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contraseña</th>
                                             <th class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Estado</th>
                                             <th class="px-1 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Empleado</th>
@@ -45,6 +46,9 @@
                                                 </td>
                                                 <td class="px-1">
                                                     <p class="text-xs font-weight-bold mb-0">{{ $u->usuario }}</p>
+                                                </td>
+                                                <td class="px-1">
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $u->email }}</p>
                                                 </td>
                                                 <td class="px-1">
                                                     <p class="text-xs font-weight-bold mb-0">{{ $u->clave }}</p>

@@ -15,41 +15,47 @@ class ProveedorController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'nombre' => 'required|min:3',
+            'nombre' => 'required|min:3|unique:proveedor,nombre',
             'direccion' => 'required|min:3',
-            'telefono' => 'required|min:3',
-            'correo' => 'required|min:3'
+            'telefono' => 'required|min:7|unique:proveedor,telefono',
+            'correo' => 'required|email|unique:proveedor,correo',
+        ], [
+            // Mensajes personalizados
+            'nombre.unique' => 'El nombre del proveedor ya está registrado.',
+            'telefono.unique' => 'El teléfono ya está registrado.',
+            'correo.unique' => 'El correo ya está registrado.',
         ]);
-        
-         $proveedor = new Proveedor();
-         $proveedor->IdProveedor = $this->generarId();
-         $proveedor->nombre = $request->post('nombre');
-         $proveedor->direccion = $request->post('direccion');
-         $proveedor->telefono = $request->post('telefono');
-         $proveedor->correo = $request->post('correo');
-         $proveedor->estado = 1;
-     
-         $proveedor->save();
-
-         $alert = array(
+    
+        $proveedor = new Proveedor();
+        $proveedor->IdProveedor = $this->generarId();
+        $proveedor->nombre = $request->post('nombre');
+        $proveedor->direccion = $request->post('direccion');
+        $proveedor->telefono = $request->post('telefono');
+        $proveedor->correo = $request->post('correo');
+        $proveedor->estado = 1;
+    
+        $proveedor->save();
+    
+        return response()->json([
             'type' => 'success',
-            'message' => 'Operación exitosa.',
-        );
-        return response()->json($alert);    }
-
-    public function edit($id) {
-        $proveedor = Proveedor::find($id);
-        return response()->json($proveedor);
+            'message' => 'Proveedor registrado exitosamente.'
+        ]);
     }
+    
 
     public function update(Request $request, $id) {
         $request->validate([
-            'nombre' => 'required|max:255',
-            'direccion' => 'required|max:255',
-            'telefono' => 'required|max:255',
-            'correo' => 'required|email',
+            'nombre' => 'required|min:3|unique:proveedor,nombre,' . $id . ',IdProveedor',
+            'direccion' => 'required|min:3',
+            'telefono' => 'required|min:7|unique:proveedor,telefono,' . $id . ',IdProveedor',
+            'correo' => 'required|email|unique:proveedor,correo,' . $id . ',IdProveedor',
+        ], [
+            // Mensajes personalizados
+            'nombre.unique' => 'El nombre del proveedor ya está registrado.',
+            'telefono.unique' => 'El teléfono ya está registrado.',
+            'correo.unique' => 'El correo ya está registrado.',
         ]);
-
+    
         $proveedor = Proveedor::find($id);
         $proveedor->nombre = $request->post('nombre');
         $proveedor->direccion = $request->post('direccion');
@@ -57,9 +63,13 @@ class ProveedorController extends Controller
         $proveedor->correo = $request->post('correo');
         $proveedor->estado = $request->post('estado', $proveedor->estado);
         $proveedor->save();
-
-        return response()->json(['type' => 'success', 'message' => 'Proveedor actualizado correctamente']);
+    
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Proveedor actualizado correctamente.'
+        ]);
     }
+    
 
     public function destroy($id) {
         // Eliminar el proveedor por su ID
@@ -97,6 +107,16 @@ class ProveedorController extends Controller
 
         return $nuevoId;
     }
+    public function edit($id) {
+        $proveedor = Proveedor::find($id);
+    
+        if (!$proveedor) {
+            return response()->json(['error' => 'Proveedor no encontrado'], 404);
+        }
+    
+        return response()->json($proveedor);
+    }
+    
 
     public function getProveedores() {
         $proveedores = Proveedor::orderBy('IdProveedor', 'ASC')->get();
