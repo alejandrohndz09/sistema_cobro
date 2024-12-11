@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $stockDisponible
  * @property string|null $idEmpleado
  * @property string|null $idProveedor
+ * @property int $estado
  * 
  * @property Empleado|null $empleado
  * @property Proveedor|null $proveedor
@@ -34,14 +35,16 @@ class Compra extends Model
 
 	protected $casts = [
 		'fecha' => 'datetime',
-		'stockDisponible' => 'int'
+		'stockDisponible' => 'int',
+		'estado' => 'int'
 	];
 
 	protected $fillable = [
 		'fecha',
 		'stockDisponible',
 		'idEmpleado',
-		'idProveedor'
+		'idProveedor',
+		'estado'
 	];
 
 	public function empleado()

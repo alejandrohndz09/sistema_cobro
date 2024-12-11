@@ -168,7 +168,7 @@ $(document).ready(function () {
 
 function alta(idCliente) {
     $.ajax({
-        url: '/clientes/alta/' + idCliente,
+        url: '/gestión-comercial/clientes/alta/' + idCliente,
         method: 'get',
         success: function (response) {
             // Procesar la respuesta exitosa
@@ -195,14 +195,14 @@ function alta(idCliente) {
 
 function baja(idCliente) {
     //Preparacion visual y direccion de la accion en el formulario
-    $('#confirmarForm').attr('action', '/clientes/baja/' + idCliente);
+    $('#confirmarForm').attr('action', '/gestión-comercial/clientes/baja/' + idCliente);
     $('#methodC').val('get')
     $('#dialogoC').text('Está a punto de deshabilitar el registro. ¿Desea continuar?')
 }
 
 function eliminar(idCliente) {
     // Preparación visual y dirección de la acción en el formulario
-    $('#confirmarForm').attr('action', '/clientes/' + idCliente); // Actualiza la acción del formulario
+    $('#confirmarForm').attr('action', '/gestión-comercial/clientes/' + idCliente); // Actualiza la acción del formulario
     $('#methodC').val('DELETE'); // Configura el método como DELETE
     $('#dialogoC').text('Está a punto de eliminar permanentemente el registro. ¿Desea continuar?'); // Cambia el texto del diálogo
 
@@ -264,7 +264,7 @@ function agregar() {
 }
 
 function editar(idcliente) {
-    $.get('/clientes/' + idcliente + '/edit', function (obj) {
+    $.get('/gestión-comercial/clientes/' + idcliente + '/edit', function (obj) {
         // Limpieza de spans de error
         const errorSpans = document.querySelectorAll('span.text-danger');
         errorSpans.forEach(function (span) {
@@ -275,7 +275,7 @@ function editar(idcliente) {
             // Preparación de formulario
             $('#titulo').text("Editar Registro");
             $('#method').val('PUT');
-            $('#clienteFormNatural').attr('action', '/clientes/' + idcliente); // Asignar la acción adecuada
+            $('#clienteFormNatural').attr('action', '/gestión-comercial/clientes/' + idcliente); // Asignar la acción adecuada
             $('#dui').val(obj.dui);
             $('#nombres').val(obj.nombres);
             $('#apellidos').val(obj.apellidos);
@@ -293,7 +293,7 @@ function editar(idcliente) {
             // Preparación de formulario
             $('#titulo2').text("Editar Registro");
             $('#method2').val('PUT'); // Cambiar a POST
-            $('#clienteFormJuridico').attr('action', '/clientes/' + idcliente); // Asignar la acción adecuada
+            $('#clienteFormJuridico').attr('action', '/gestión-comercial/clientes/' + idcliente); // Asignar la acción adecuada
             $('#nit').val(obj.nit);
             $('#nombreEmpresa').val(obj.nombre_empresa);
             $('#telefonoJuridico').val(obj.telefono);
@@ -378,7 +378,7 @@ function mostrarDatos() {
                      </td>
                     <td class="px-1">
                         <p class="text-xs font-weight-bold mb-0">
-                            <i class="fas fa-${a.tipoCliente === 'natural' ? 'person' : 'building'} text-xxs"></i>&nbsp;
+                            <i class="fas fa-${a.tipoCliente === 'Natural' ? 'person' : 'building'} text-xxs"></i>&nbsp;
                              ${a.nombre}
                         </p>
                         <p class="text-xxs mb-0">
@@ -414,8 +414,9 @@ function mostrarDatos() {
         error: function (xhr, status, error) {
             Toast.fire({
                 icon: 'error',
-                title: xhr.responseJSON.error
+                title: xhr.responseJSON
             });
+            console.log(xhr.responseJSON);
         }
     });
 }

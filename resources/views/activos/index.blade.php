@@ -24,7 +24,8 @@
                                 <span class="text-xs">Valor estimado:</span>
                                 <hr class="horizontal dark my-1">
                                 <h5 class="mb-0">
-                                    ${{ number_format(optional($resultados->firstWhere('categoria_agrupada', 'Edificación'))->total, 2) ?? '0.00' }}
+
+                                    ${{ number_format($resultados[0]['valorAcumulado'], 2, '.', ',') }}
                                 </h5>
                             </div>
                         </div>
@@ -43,7 +44,8 @@
                                 <span class="text-xs">Valor estimado:</span>
                                 <hr class="horizontal dark my-1">
                                 <h5 class="mb-0">
-                                    ${{ number_format(optional($resultados->firstWhere('categoria_agrupada', 'Maquinaria'))->total, 2) ?? '0.00' }}
+                                    ${{ number_format($resultados[1]['valorAcumulado'], 2, '.', ',') }}
+
                                 </h5>
                             </div>
                         </div>
@@ -63,7 +65,8 @@
                                 <span class="text-xs">Valor estimado:</span>
                                 <hr class="horizontal dark my-1">
                                 <h5 class="mb-0">
-                                    ${{ number_format(optional($resultados->firstWhere('categoria_agrupada', 'Vehiculo'))->total, 2) ?? '0.00' }}
+                                    ${{ number_format($resultados[2]['valorAcumulado'], 2, '.', ',') }}
+
                                 </h5>
                             </div>
                         </div>
@@ -83,7 +86,8 @@
                                 <span class="text-xs">Valor estimado:</span>
                                 <hr class="horizontal dark my-1">
                                 <h5 class="mb-0">
-                                    ${{ number_format(optional($resultados->firstWhere('categoria_agrupada', 'Otros bienes muebles'))->total, 2) ?? '0.00' }}
+                                    ${{ number_format($resultados[3]['valorAcumulado'], 2, '.', ',') }}
+
                                 </h5>
                             </div>
                         </div>
@@ -175,7 +179,7 @@
                                                 </td>
                                                 <td class="px-1">
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ '$' . number_format($a->bienes->sum('precio'), 2, '.', ',') }}
+                                                        {{ '$' . number_format($a->obtenerValorAcumulado(), 2, '.', ',') }}
                                                     </p>
                                                 </td>
                                                 <td class="px-1 text-xs">
@@ -270,7 +274,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header pb-0 p-3">
                         <div class="row d-flex align-items-center">
                             <h6 class="mb-0">Activos por Sucursal</h6>
@@ -299,7 +303,7 @@
                             @endforeach
                         </ul>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
         </div>

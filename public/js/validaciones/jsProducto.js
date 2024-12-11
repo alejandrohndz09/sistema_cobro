@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    itemsPerPage = 8;
+    updatePagination();
     $('#ProductoForm').submit(function (e) {
         e.preventDefault();
         let form = $(this);
@@ -197,6 +199,7 @@ function alta(idProducto) {
         }
     });
 }
+
 function mostrarDatos() {
     $.ajax({
         url: '/gestión-comercial/productos/obtener-productos',
@@ -244,6 +247,8 @@ function mostrarDatos() {
 
                 // Crear la fila de la tabla
                 const tr = document.createElement('tr');
+                tr.setAttribute('data-id', c.idProducto);
+                tr.classList.add('tr-link'); // Clase de la fila<<
                 tr.innerHTML = `
                         <td>
                             ${imagen}
