@@ -13,10 +13,22 @@
                             <input type="hidden" name="_method" id="method" value="POST">
                             
                             <!-- Campo Usuario -->
-                            <label for="usuario">Usuario: *</label>
-                            <div class="input-group mb-1">
-                                <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Nombre de usuario" required>
+                            <div class="form-group">
+                                <label for="usuario">Usuario: *</label>
+                                 <div class="input-group mb-3">
+                                 <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Nombre de usuario" required>
+                                 </div>
+                                 <small id="error-usuario" class="form-text text-danger"></small>
                             </div>
+
+                            <div class="form-group">
+                               <label for="email">Correo: *</label>
+                                  <div class="input-group mb-3">
+                                    <input type="email" name="email" id="email" class="form-control" placeholder="Agregue su correo" required>
+                                  </div>
+                                    <small id="error-email" class="form-text text-danger"></small>
+                            </div>
+
 
                            <!-- Campo ID Empleado -->
                              <label for="idEmpleado">Empleado: *</label>
@@ -24,7 +36,7 @@
                                 <select name="idEmpleado" id="idEmpleado" class="form-control" required>
                                 <option value="">Seleccione un empleado</option>
                                 @foreach($empleados as $empleado)
-                                <option value="{{ $empleado->idEmpleado }}">{{ $empleado->nombres }}</option>
+                                <option value="{{ $empleado->idEmpleado }}">{{ $empleado->nombres . ' ' . $empleado->apellidos }}</option>
                                 @endforeach
                                 </select>
                               </div>

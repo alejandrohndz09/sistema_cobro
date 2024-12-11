@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $('#usuarioForm').submit(function (e) {
         e.preventDefault();
+        limpiarErrores();
         let form = $(this);
         let url = form.attr('action');
         let method = $('#method').val();
@@ -11,7 +12,9 @@ $(document).ready(function () {
             data: form.serialize(),
             success: function (response) {
                 // Procesar la respuesta exitosa
+                console.log(response.message)
                 Toast.fire({
+                    
                     icon: response.type,
                     title: response.message
                 });
@@ -69,6 +72,21 @@ $(document).ready(function () {
                     title: 'Ocurrió un error. Por favor, inténtelo de nuevo.'
                 });
 
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    const errors = xhr.responseJSON.errors;
+                    for (const key in errors) {
+                        const errorDiv = $(`#error-${key}`);
+                        errorDiv.text(errors[key][0]); // Coloca el mensaje de error
+                        errorDiv.removeClass('d-none'); // Muestra el mensaje
+                    }
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Ocurrió un error. Por favor, inténtelo de nuevo.',
+                    });
+                }
             }
         });
     });
@@ -77,10 +95,11 @@ $(document).ready(function () {
         agregar();
     });
 
-$(document).on('click', '.btnEditar', function () {
-    const id = $(this).data('id');
-    editar(id); // Llama a la función editar
-});
+    $(document).on('click', '.btnEditar', function () {
+        const id = $(this).data('id');
+        editar(id); // Llama a la función editar
+    });
+    
 
 $(document).on('click', '.btnDeshabilitar', function () {
     const id = $(this).data('id');
@@ -102,6 +121,7 @@ $(document).on('click', '.btnEliminar', function () {
 
 function agregar() {
     //Limpieza de spams
+    limpiarErrores(); 
     const errorSpans = document.querySelectorAll('span.text-danger');
     errorSpans.forEach(function (span) {
         span.innerHTML = '';
@@ -110,6 +130,7 @@ function agregar() {
     //Preparación de formulario
     $('#titulo').text("Nuevo Registro");
     $('#usuario').val('');
+    $('#email').val('');
     $('#idEmpleado').val('');
 
     //otros
@@ -128,6 +149,7 @@ function editar(idUsuario) {
         //Preparación de formulario
         $('#titulo').text("Editar Registro");
         $('#usuario').val(obj.usuario);
+        $('#email').val(obj.email);
         $('#idEmpleado').val(obj.idEmpleado);
 
         //otros
@@ -142,6 +164,11 @@ function eliminar(idUsuario) {
     $('#confirmarForm').attr('action', '/opciones/usuarios/' + idUsuario);
     $('#methodC').val('Delete')
     $('#dialogo').text('Está a punto de eliminar permanentemente el registro. ¿Desea continuar?')
+}
+function limpiarErrores() {
+    // Limpia todos los mensajes de error
+    $('small.text-danger').text('');
+    $('span.text-danger').text('');
 }
 
 function baja(idUsuario) {
@@ -177,6 +204,7 @@ function alta(idUsuario) {
         }
     });
 }
+
 function mostrarDatos() {
     $.ajax({
         url: '/obtener-usuarios',
@@ -193,6 +221,9 @@ function mostrarDatos() {
                     </td>
                     <td class="px-1">
                         <p class="text-xs font-weight-bold mb-0">${c.usuario}</p>
+                    </td>
+                    <td class="px-1">
+                        <p class="text-xs font-weight-bold mb-0">${c.email}</p>
                     </td>
                     <td class="px-1">
                         <p class="text-xs font-weight-bold mb-0">${c.clave}</p>
@@ -247,6 +278,8 @@ document.querySelectorAll('.btnEditar').forEach(button => {
             .then(response => response.json())
             .then(data => {
                 document.getElementById('usuario').value = data.usuario;
+                document.getElementById('email').value = data.email;
+
                 document.getElementById('idEmpleado').value = data.idEmpleado; // Selecciona el ID del empleado
             });
     });

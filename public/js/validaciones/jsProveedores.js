@@ -69,6 +69,19 @@ $(document).ready(function () {
                     title: 'Ocurrió un error. Por favor, inténtelo de nuevo.'
                 });
 
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    const errors = xhr.responseJSON.errors;
+                    for (const key in errors) {
+                        $(`#error-${key}`).text(errors[key][0]); // Mostrar mensajes de error
+                    }
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Ocurrió un error. Por favor, inténtelo de nuevo.'
+                    });
+                }
             }
         });
     });
@@ -101,6 +114,7 @@ $(document).on('click', '.btnEliminar', function () {
 // Función para agregar un nuevo proveedor
 function agregar() {
     // Limpiar errores anteriores
+    limpiarFormulario();
     const errorSpans = document.querySelectorAll('span.text-danger');
     errorSpans.forEach(function (span) {
         span.innerHTML = '';
@@ -120,24 +134,42 @@ function agregar() {
 
 // Función para editar un proveedor
 function editar(IdProveedor) {
-    $.get('/opciones/proveedores/' + IdProveedor + '/edit', function (obj) {
-        // Limpiar errores anteriores
-        const errorSpans = document.querySelectorAll('span.text-danger');
-        errorSpans.forEach(function (span) {
-            span.innerHTML = '';
+    $.get(`/opciones/proveedores/${IdProveedor}/edit`, function (obj) {
+        if (obj) {
+            limpiarFormulario(); // Limpia los errores y el formulario
+
+            $('#titulo').text("Editar Proveedor");
+            $('#nombre').val(obj.nombre);
+            $('#direccion').val(obj.direccion);
+            $('#telefono').val(obj.telefono);
+            $('#correo').val(obj.correo);
+            $('#estado').val(obj.estado);
+
+            $('#method').val('PUT'); // Define el método como PUT
+            $('#proveedorForm').attr('action', `/opciones/proveedores/${IdProveedor}`);
+            $('#modalForm').modal('show'); // Abre el modal
+        } else {
+            Toast.fire({
+                icon: 'error',
+                title: 'No se pudieron cargar los datos del proveedor.'
+            });
+        }
+    }).fail(function () {
+        Toast.fire({
+            icon: 'error',
+            title: 'Error al obtener los datos del proveedor.'
         });
-
-        $('#titulo').text("Editar Proveedor");
-        $('#nombre').val(obj.nombre);
-        $('#direccion').val(obj.direccion);
-        $('#telefono').val(obj.telefono);
-        $('#correo').val(obj.correo);
-        $('#estado').val(obj.estado);
-
-        $('#method').val('PUT');
-        $('#proveedorForm').attr('action', '/opciones/proveedores/' + IdProveedor);
-        $('#modalForm').modal('show');
     });
+}
+
+
+function limpiarFormulario() {
+    // Limpia mensajes de error
+    $('small.text-danger').text('');
+    $('span.text-danger').text('');
+
+    // Resetea los valores del formulario
+    $('#proveedorForm')[0].reset();
 }
 
 // Función para eliminar un proveedor
