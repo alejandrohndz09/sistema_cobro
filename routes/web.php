@@ -143,6 +143,8 @@ Route::resource('/gestión-comercial/productos/proveedores', 'App\Http\Controlle
   Route::get('/gestión-comercial/cuotas/{idVenta}', 'App\Http\Controllers\CuotaController@obtenerCuotasPorVenta');
   Route::post('/gestión-comercial/cuotas/{idCuota}/actualizar-fecha', 'App\Http\Controllers\CuotaController@actualizarFecha');
   Route::get('/gestión-comercial/cuotas/actualizar-estados', 'App\Http\Controllers\CuotaController@actualizarEstadoCuotas');
+  Route::post('/gestión-comercial/ventas/{idVenta}/actualizar-estado', 'App\Http\Controllers\CuotaController@actualizarEstadoVenta');
+
 
 	Route::resource('/gestión-comercial/clientes', 'App\Http\Controllers\ClienteController');
 	Route::get('/obtener-listaclientes/{tipoCliente}/{tipoClasificacion}', 'App\Http\Controllers\ClienteController@obtenerClientes');
@@ -198,6 +200,7 @@ Route::resource('/gestión-comercial/productos/proveedores', 'App\Http\Controlle
 	})->name('sign-up');
 
 	Route::post('/logout', 'App\Http\Controllers\LoginController@logout');
+
 });
 // Route::group(['middleware' => 'guest'], function () {
 // 	Route::get('/register', [RegisterController::class, 'create']);

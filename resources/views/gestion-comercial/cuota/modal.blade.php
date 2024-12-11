@@ -21,7 +21,7 @@
                                 </div>
                                 <span id="error-fechaPago" class="text-danger text-xs mb-3"></span>
 
-                                <label>Fecha límite: *</label>
+                                {{-- <label>Fecha límite: *</label>
                                 <div class="input-group mb-1">
                                     <input type="date" name="fechaLimite" id="fechaLimite" class="form-control"
                                         placeholder="Fecha límite" autocomplete="off">
@@ -40,7 +40,7 @@
                                     <input type="number" name="mora" id="mora" class="form-control"
                                         placeholder="Mora" autocomplete="off" step="0.01" min="0">
                                 </div>
-                                <span id="error-mora" class="text-danger text-xs mb-3"></span>
+                                <span id="error-mora" class="text-danger text-xs mb-3"></span> --}}
 
                             </div>
 
