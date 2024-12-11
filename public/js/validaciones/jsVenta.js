@@ -644,7 +644,7 @@ function mostrarDatos() {
                 let acciones;
                 if (a.estado == 1) {
                     acciones = `
-                       
+
                         <a role="button" data-bs-toggle="modal" data-bs-target="#modalConfirm" data-id="${a.idVenta}" data-bs-tt="tooltip" data-bs-original-title="Deshabilitar" class="btnDeshabilitar">
                             <i class="fas fa-minus-circle text-secondary"></i>
                         </a>
@@ -707,7 +707,7 @@ function mostrarDatos() {
                     </td>
                     <td class="px-1 text-xs">
                         <span class="badge badge-xs opacity-7 bg-${a.estado == 1 ? 'success' : 'secondary'}">
-                            ${a.estado == 1 ? 'activa' : 'inactiva'}
+                            ${a.estado == 1 ? 'Realizada' : 'Pendiente'}
                         </span>
                     </td>
                     <td>

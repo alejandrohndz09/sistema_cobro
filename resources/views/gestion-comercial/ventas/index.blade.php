@@ -295,7 +295,7 @@
                                                 <td class="px-1 text-xs">
                                                     <span
                                                         class="badge badge-xs opacity-7 bg-{{ $v->estado == 1 ? 'success' : 'secondary' }} ">
-                                                        {{ $v->estado == 1 ? 'activa' : 'inactiva' }}</span>
+                                                        {{ $v->estado == 1 ? 'Realizada' : 'Pendiente' }}</span>
                                                 </td>
                                                 <td>
                                                     @if ($v->estado == 1)
