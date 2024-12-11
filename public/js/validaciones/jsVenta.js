@@ -131,7 +131,7 @@ $(document).ready(function () {
     $('#tableBody').on('click', '.tr-link', function (e) {
         if (!$(e.target).closest('a').length) {
             let id = $(this).data('id');
-            window.location.href = `/ventas/${id}`;
+            window.location.href = `/gestión-comercial/ventas/${id}`;
         }
     });
 

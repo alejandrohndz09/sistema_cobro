@@ -379,57 +379,30 @@
                 <div class="card">
                     <div class="card-header pb-0 p-3">
                         <div class="row d-flex align-items-center">
-
                             <h6 class="mb-0">Ventas por Sucursal</h6>
-
                         </div>
                     </div>
                     <div class="card-body p-3 pb-0">
                         <ul class="list-group">
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-
-                                <div class="d-flex align-items-center">
-                                    <button
-                                        class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-map-marker-alt"></i></button>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark font-weight-bold text-sm">San Vicente</h6>
-                                        <span class="text-xs">Valor distribuido:</span>
+                            @foreach ($ventasPorSucursal as $resultado)
+                                <li
+                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                    <div class="d-flex align-items-center">
+                                        <button
+                                            class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </button>
+                                        <div class="d-flex flex-column">
+                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">{{ $resultado->ubicacion }}
+                                            </h6>
+                                            <span class="text-xs">Valor distribuido:</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex align-items-center text-sm font-weight-bold">
-                                    $ 2,000
-                                </div>
-                            </li>
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-
-                                <div class="d-flex align-items-center">
-                                    <button
-                                        class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-map-marker-alt"></i></button>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark font-weight-bold text-sm">San Salvador</h6>
-                                        <span class="text-xs">Valor distribuido:</span>
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+                                        $ {{ number_format($resultado->total, 2) }}
                                     </div>
-                                </div>
-                                <div class="d-flex align-items-center text-sm font-weight-bold">
-                                    $ 2,000
-                                </div>
-                            </li>
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                                <div class="d-flex align-items-center">
-                                    <button
-                                        class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-map-marker-alt"></i></button>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark font-weight-bold text-sm">Santa Ana</h6>
-                                        <span class="text-xs">Valor distribuido:</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center text-sm font-weight-bold">
-                                    $ 2,000
-                                </div>
-                            </li>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>

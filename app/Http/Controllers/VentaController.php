@@ -34,7 +34,17 @@ class VentaController extends Controller
                 ->orderBy('fecha', 'desc')
                 ->get();
         }
-        return view('gestion-comercial.ventas.index')->with('ventas', $ventas);
+
+        // Consulta para obtener la suma de ventas agrupados por sucursal
+        $ventasPorSucursal  = DB::table('sucursal')
+            ->join('empresa', 'sucursal.idEmpresa', '=', 'empresa.idEmpresa')
+            ->join('empleado', 'empresa.idEmpleado', '=', 'empleado.idEmpleado')
+            ->join('venta', 'empleado.idEmpleado', '=', 'venta.idEmpleado')
+            ->select('sucursal.ubicacion as ubicacion', DB::raw('SUM(venta.total) AS total'))
+            ->groupBy('sucursal.ubicacion')
+            ->get();
+
+        return view('gestion-comercial.ventas.index', compact('ventas', 'ventasPorSucursal'));
     }
 
     public function store(Request $request)
@@ -153,8 +163,44 @@ class VentaController extends Controller
 
     public function show($id)
     {
-        $venta = Venta::find($id);
-        return view('gestion-comercial.ventas.detalle.index')->with('venta', $venta);
+        // Obtener la venta con las relaciones necesarias (detalles y productos)
+        $venta = Venta::with(['cliente_natural', 'cliente_juridico', 'detalle_venta.producto'])->find($id);
+
+        if (!$venta) {
+            return redirect()->back()->withErrors(['error' => 'Venta no encontrada']);
+        }
+
+        // Determinar si el cliente es natural o jurídico
+        $datosCliente = [];
+        if ($venta->idCliente_natural !== null) {
+            $cliente = $venta->Cliente_natural;
+            $datosCliente['nombre'] = $cliente->nombres . ' ' . $cliente->apellidos;
+            $datosCliente['telefono'] = $cliente->telefono;
+            $datosCliente['direccion'] = $cliente->direccion;
+            if ($venta->tipo === 0) {
+                $datosCliente['tipo'] = 'Contado';
+            } else {
+                $datosCliente['tipo'] = 'Crédito';
+            }
+        } elseif ($venta->idCliente_juridico !== null) {
+            $cliente = $venta->cliente_juridico;
+            $datosCliente['nombre'] = $cliente->nombre_empresa;
+            $datosCliente['telefono'] = $cliente->telefono;
+            $datosCliente['direccion'] = $cliente->direccion;
+            if ($venta->tipo === 0) {
+                $datosCliente['tipo'] = 'Contado';
+            } else {
+                $datosCliente['tipo'] = 'Crédito';
+            }
+        } else {
+            $datosCliente = [
+                'nombre' => 'N/A',
+                'telefono' => 'N/A',
+                'direccion' => 'N/A',
+                'tipo' => 'Desconocido'
+            ];
+        }
+        return view('gestion-comercial.ventas.detalle', compact('venta', 'datosCliente'));
     }
 
     public function edit($id)
@@ -472,5 +518,28 @@ class VentaController extends Controller
                 'pdf' => $pdfBase64,
             ]);
         }
+    }
+    public function obtenerProducto($idDetalleVenta)
+    {
+        // Buscar el detalle de la venta por el idDetalleVenta
+        $detalleVenta = DetalleVenta::with('producto') // Asegúrate de que la relación 'producto' esté definida en el modelo DetalleVenta
+            ->find($idDetalleVenta);
+
+        // Verificar si el detalle de venta existe
+        if (!$detalleVenta) {
+            return response()->json(['error' => 'Detalle de venta no encontrado'], 404);
+        }
+
+        // Obtener el producto asociado con el detalle de venta
+        $producto = $detalleVenta->producto;
+
+        // Devolver los detalles del producto en formato JSON
+        return response()->json([
+            'nombre' => $producto->nombre,
+            'descripcion' => $producto->descripcion,
+            'cantidad' => $detalleVenta->cantidad,  // Usamos la cantidad del detalle de venta
+            'subtotal' => $detalleVenta->subtotal, // Usamos el subtotal del detalle de venta
+            'imagen' => asset('assets/img/productos/' . $producto->imagen)
+        ]);
     }
 }

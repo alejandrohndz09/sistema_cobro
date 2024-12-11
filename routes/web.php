@@ -124,6 +124,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/gestión-comercial/ventas/baja/{id}', 'App\Http\Controllers\VentaController@baja');
 	Route::get('/gestión-comercial/ventas/alta/{id}', 'App\Http\Controllers\VentaController@alta');
 	Route::resource('/gestión-comercial/ventas', 'App\Http\Controllers\VentaController');
+	Route::get('/gestión-comercial/obtener-producto/{id}', 'App\Http\Controllers\VentaController@ObtenerProducto');
 
 	Route::resource('/clientes', 'App\Http\Controllers\ClienteController');
 	Route::get('/obtener-listaclientes/{tipoCliente}/{tipoClasificacion}', 'App\Http\Controllers\ClienteController@obtenerClientes');
