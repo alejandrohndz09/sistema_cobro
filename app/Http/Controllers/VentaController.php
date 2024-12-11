@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Venta;
 use App\Models\ClienteJuridico;
 use App\Models\ClienteNatural;
+use App\Models\Cuota;
 use App\Models\Sucursal;
 use App\Models\Empresa;
 use App\Models\Departamento;
@@ -119,10 +120,10 @@ class VentaController extends Controller
                 'idEmpleado' => Auth::user()->idEmpleado,
                 'idCliente_juridico' => DB::table('cliente_juridico')->where('idClienteJuridico', $request->idCliente)->exists() ? $request->idCliente : null,
                 'idCliente_natural' => DB::table('cliente_natural')->where('idCliente_natural', $request->idCliente)->exists() ? $request->idCliente : null,
-                'estado' => 1,
+                'estado' => $request->tipo === 'Crédito' ? 0 : 1,
             ]);
 
-            // Crear un array para almacenar los detalles       
+            // Crear un array para almacenar los detalles
             $detallesData = [];
 
             foreach ($detalles as $i => $detalle) {
@@ -474,6 +475,49 @@ class VentaController extends Controller
         }
     }
 
+    // public function pdfFactura($idVenta)
+    // {
+    //     // Obtener la venta con el cliente relacionado
+    //     $venta = Venta::with(['cliente_natural', 'cliente_juridico'])->findOrFail($idVenta);
+
+    //     // Obtener los detalles de la venta
+    //     $detalles = DetalleVenta::where('idVenta', $idVenta)
+    //         ->with('producto') // Cargar relación con producto
+    //         ->get();
+
+    //     // Calcular precio de venta y subtotal
+    //     foreach ($detalles as $detalle) {
+    //         $totalCompra = DB::table('detalle_compra')
+    //             ->where('idProducto', $detalle->idProducto)
+    //             ->sum(DB::raw('precio * cantidad'));
+
+    //         $totalCantidad = DB::table('detalle_compra')
+    //             ->where('idProducto', $detalle->idProducto)
+    //             ->sum('cantidad');
+
+    //         $detalle->precioVenta = round(($totalCompra / ($totalCantidad ?: 1)) * 1.10, 2);
+    //         $detalle->subtotal = $detalle->precioVenta * $detalle->cantidad;
+    //     }
+
+    //     // Verificar si la venta es a crédito
+    //     $numeroCuotas = $venta->tipo == 1 ? $venta->meses : 0;
+
+    //     // Calcular IVA (13%)
+    //     $iva = round($venta->total * 0.13, 2);
+
+    //     // Calcular Total con IVA
+    //     $totalConIva = round($venta->total + $iva, 2);
+
+    //     // Obtener la empresa
+    //     $empresa = Empresa::first();
+
+    //     // Generar el PDF
+    //     $pdf = PDF::loadView('gestion-comercial.ventas.factura', compact('venta', 'detalles', 'empresa', 'iva', 'totalConIva', 'numeroCuotas'));
+
+    //     // Descargar el PDF
+    //     return $pdf->download('Factura-Venta-' . $venta->idVenta . '.pdf');
+    // }
+
     public function pdfFactura($idVenta)
     {
         // Obtener la venta con el cliente relacionado
@@ -484,31 +528,51 @@ class VentaController extends Controller
             ->with('producto') // Cargar relación con producto
             ->get();
 
-        // Cálculo manual de precio de venta para cada detalle
+        // Calcular precio de venta y subtotal
         foreach ($detalles as $detalle) {
             $totalCompra = DB::table('detalle_compra')
                 ->where('idProducto', $detalle->idProducto)
-                ->sum(DB::raw('precio * cantidad')); // Suma de precio * cantidad
+                ->sum(DB::raw('precio * cantidad'));
 
             $totalCantidad = DB::table('detalle_compra')
                 ->where('idProducto', $detalle->idProducto)
-                ->sum('cantidad'); // Suma de las cantidades
+                ->sum('cantidad');
 
-            // Calcular precio de venta
             $detalle->precioVenta = round(($totalCompra / ($totalCantidad ?: 1)) * 1.10, 2);
+            $detalle->subtotal = round($detalle->precioVenta * $detalle->cantidad, 2);
+        }
+
+        // Calcular el total sin IVA
+        $totalSinIva = $detalles->sum('subtotal'); // Aquí se define correctamente
+
+        // Calcular IVA (13%)
+        $iva = round($totalSinIva * 0.13, 2);
+
+        // Calcular Total con IVA
+        $totalConIva = round($totalSinIva + $iva, 2);
+
+        // Calcular el número de cuotas
+        $ultimaFechaCuota = Cuota::where('idVenta', $idVenta)->max('fechaLimite');
+        $numeroCuotas = 0;
+        if ($ultimaFechaCuota) {
+            $fechaInicio = \Carbon\Carbon::parse($venta->fecha);
+            $fechaFin = \Carbon\Carbon::parse($ultimaFechaCuota);
+            $numeroCuotas = $fechaInicio->diffInMonths($fechaFin) + 1;
         }
 
         // Obtener la empresa
         $empresa = Empresa::first();
 
-        // Obtener la sucursal relacionada
-        $sucursal = null;
-        if ($empresa && $empresa->empleado && $empresa->empleado->departamento) {
-            $sucursal = $empresa->empleado->departamento->sucursal;
-        }
-
         // Generar el PDF
-        $pdf = PDF::loadView('gestion-comercial.ventas.factura', compact('venta', 'detalles', 'empresa', 'sucursal'));
+        $pdf = PDF::loadView('gestion-comercial.ventas.factura', compact(
+            'venta',
+            'detalles',
+            'empresa',
+            'iva',
+            'totalConIva',
+            'numeroCuotas',
+            'totalSinIva' // Asegurarse de pasar esta variable
+        ));
 
         // Descargar el PDF
         return $pdf->download('Factura-Venta-' . $venta->idVenta . '.pdf');

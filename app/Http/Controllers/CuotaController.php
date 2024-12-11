@@ -215,48 +215,78 @@ class CuotaController extends Controller
         $fechaPago = Carbon::parse($request->fechaPago);
         $fechaLimite = Carbon::parse($cuota->fechaLimite);
 
-        if ($fechaPago->greaterThan($fechaLimite)) {
-            // Si la fecha de pago es posterior a la fecha límite
-            $mora = $cuota->monto * 0.05; // 5% del monto
-            $cuota->mora = $mora; // Asignar la mora
-            $cuota->estado = 1; // Cambiar el estado a "Cancelado"
-        } elseif ($fechaPago->lessThanOrEqualTo($fechaLimite)) {
+        // Determinar el estado según las condiciones
+        if ($fechaPago->lessThanOrEqualTo($fechaLimite)) {
             // Si la fecha de pago es igual o anterior a la fecha límite
             $cuota->mora = 0; // No hay mora
             $cuota->estado = 1; // Cambiar el estado a "Cancelado"
+        } elseif ($fechaPago->greaterThan($fechaLimite)) {
+            // Si la fecha de pago es posterior a la fecha límite
+            $cuota->mora = $cuota->monto * 0.05; // 5% del monto como mora
+            $cuota->estado = 3; // Cambiar el estado a "Cancelado con Mora"
         }
 
-        // Cambiar estado a "En mora" si ya pasó la fecha límite y no se ha pagado
-        if (Carbon::now()->greaterThan($fechaLimite) && !$cuota->fechaPago) {
-            $cuota->estado = 2; // En mora
+        // Si no hay fecha de pago y ya pasó la fecha límite, poner en "En Mora"
+        if (!$cuota->fechaPago && Carbon::now()->greaterThan($fechaLimite)) {
+            $cuota->estado = 2; // En Mora
         }
 
         // Actualizar la fecha de pago
         $cuota->fechaPago = $fechaPago;
 
+        // Guardar los cambios
         $cuota->save();
 
-        return response()->json(['message' => 'Fecha de pago actualizada correctamente.']);
+        return response()->json(['message' => 'Fecha de pago actualizada correctamente.'], 200);
     }
 
 
-    public function actualizarEstadoCuotas()
+    public function verificarEstadoVenta($idVenta)
     {
-        // Obtener todas las cuotas pendientes (estado = 0)
-        $cuotasPendientes = Cuota::where('estado', 0)->get();
+        // Obtener todas las cuotas asociadas a la venta
+        $cuotas = Cuota::where('idVenta', $idVenta)->get();
 
-        foreach ($cuotasPendientes as $cuota) {
-            $fechaLimite = Carbon::parse($cuota->fechaLimite);
-            $fechaActual = Carbon::now();
+        // Verificar si todas las cuotas están canceladas (estado 1 o 3)
+        $todasCanceladas = $cuotas->every(function ($cuota) {
+            return in_array($cuota->estado, [1, 3]); // Cancelado o Cancelado con Mora
+        });
 
-            // Si la fecha actual es mayor a la fecha límite, cambia el estado a "En mora"
-            if ($fechaActual->greaterThan($fechaLimite)) {
-                $cuota->estado = 2; // En mora
-                $cuota->mora = $cuota->monto * 0.05; // Calcula la mora (5% del monto)
-                $cuota->save(); // Guarda los cambios
-            }
+        // Si todas están canceladas, cambiar el estado de la venta a 1 (finalizada)
+        if ($todasCanceladas) {
+            $venta = Venta::findOrFail($idVenta);
+            $venta->estado = 1; // Cambiar estado a 'finalizada' o lo que corresponda
+            $venta->save();
+
+            return response()->json(['message' => 'El estado de la venta se actualizó a finalizada.']);
         }
 
-        return response()->json(['message' => 'Estados de cuotas actualizados correctamente.']);
+        return response()->json(['message' => 'Aún hay cuotas pendientes.']);
+    }
+
+    public function actualizarEstadoVenta($idVenta)
+    {
+        // Obtener todas las cuotas de la venta
+        $cuotas = Cuota::where('idVenta', $idVenta)->get();
+
+        // Verificar si todas las cuotas están en estado 1 o 3
+        $todasCanceladas = $cuotas->every(function ($cuota) {
+            return $cuota->estado === 1 || $cuota->estado === 3;
+        });
+
+        // Cambiar el estado de la venta si todas las cuotas están canceladas
+        if ($todasCanceladas) {
+            $venta = Venta::findOrFail($idVenta);
+            $venta->estado = 1; // Cambiar estado a 1 (Finalizada)
+            $venta->save();
+
+            return response()->json([
+                'message' => 'El estado de la venta ha sido actualizado a Finalizada.',
+                'venta' => $venta,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No todas las cuotas están canceladas.',
+        ]);
     }
 }

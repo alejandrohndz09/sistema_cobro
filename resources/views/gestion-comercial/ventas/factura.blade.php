@@ -137,7 +137,6 @@
             Factura de Venta
         </div>
 
-        <!-- Sale Details -->
         <div class="details">
             <p><strong>ID Venta:</strong> {{ $venta->idVenta }}</p>
             <p><strong>Fecha:</strong> {{ $venta->fecha }}</p>
@@ -151,7 +150,11 @@
                 @endif
             </p>
             <p><strong>Tipo de Venta:</strong> {{ $venta->tipo == 0 ? 'Contado' : 'Crédito' }}</p>
+            @if ($venta->tipo == 1)
+                <p><strong>Número de Cuotas:</strong> {{ $numeroCuotas }} meses</p>
+            @endif
         </div>
+
 
         <!-- Product Table -->
         <table>
@@ -175,8 +178,16 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3" class="total-label">Total:</td>
-                    <td class="total-value">${{ number_format($venta->total, 2) }}</td>
+                    <td colspan="3" class="total-label">Subtotal:</td>
+                    <td class="total-value">${{ number_format($totalSinIva, 2) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="total-label">IVA (13%):</td>
+                    <td class="total-value">${{ number_format($iva, 2) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="total-label">Total con IVA:</td>
+                    <td class="total-value">${{ number_format($totalConIva, 2) }}</td>
                 </tr>
             </tfoot>
         </table>
