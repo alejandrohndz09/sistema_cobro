@@ -8,6 +8,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\SucursalController;
+use App\Http\Controllers\CompraController;
 use FontLib\Table\Type\name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -66,15 +67,15 @@ Route::group(['middleware' => 'auth'], function () {
 
 	//Pantalla empresa
 	Route::resource('/opciones/empresa', 'App\Http\Controllers\EmpresaController');
-  Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
-  Route::get('/opciones/empresa/{id}/editEmpresa', 'App\Http\Controllers\EmpresaController@editEmpresa')->name('empresa.edit');
-  Route::put('/opciones/empresa/{id}/updateEmpresa', 'App\Http\Controllers\EmpresaController@updateEmpresa')->name('empresa.update');
+	Route::get('/obtener-empresa', 'App\Http\Controllers\EmpresaController@getEmpresa');
+	Route::get('/opciones/empresa/{id}/editEmpresa', 'App\Http\Controllers\EmpresaController@editEmpresa')->name('empresa.edit');
+	Route::put('/opciones/empresa/{id}/updateEmpresa', 'App\Http\Controllers\EmpresaController@updateEmpresa')->name('empresa.update');
 
-  //Sucursales
-  Route::resource('/opciones/sucursal', 'App\Http\Controllers\SucursalController');
-  Route::get('/obtener-sucursales', 'App\Http\Controllers\SucursalController@getSucursales');
-  Route::get('/opciones/sucursal/baja/{id}', 'App\Http\Controllers\SucursalController@bajaSucursal');
-  Route::get('/opciones/sucursal/alta/{id}', 'App\Http\Controllers\SucursalController@altaSucursal');
+	//Sucursales
+	Route::resource('/opciones/sucursal', 'App\Http\Controllers\SucursalController');
+	Route::get('/obtener-sucursales', 'App\Http\Controllers\SucursalController@getSucursales');
+	Route::get('/opciones/sucursal/baja/{id}', 'App\Http\Controllers\SucursalController@bajaSucursal');
+	Route::get('/opciones/sucursal/alta/{id}', 'App\Http\Controllers\SucursalController@altaSucursal');
 
 	//Pantalla empleados
 	Route::resource('/opciones/empleados', 'App\Http\Controllers\EmpleadoController');
@@ -86,20 +87,20 @@ Route::group(['middleware' => 'auth'], function () {
 	//Pantalla de usuarios
 	Route::resource('/opciones/usuarios', 'App\Http\Controllers\UsuarioController');
 	Route::get('/obtener-usuarios', 'App\Http\Controllers\UsuarioController@getUsuarios');
-  Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
-  Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
+	Route::get('/opciones/usuarios/baja/{id}', 'App\Http\Controllers\UsuarioController@baja');
+	Route::get('/opciones/usuarios/alta/{id}', 'App\Http\Controllers\UsuarioController@alta');
 
 	//Pantalla de Proveedor
 	Route::resource('/opciones/proveedores', 'App\Http\Controllers\ProveedorController');
 	Route::get('/obtener-proveedores', 'App\Http\Controllers\ProveedorController@getProveedores');
-  Route::get('/opciones/proveedores/baja/{id}', 'App\Http\Controllers\ProveedorController@baja');
-  Route::get('/opciones/proveedores/alta/{id}', 'App\Http\Controllers\ProveedorController@alta');
+	Route::get('/opciones/proveedores/baja/{id}', 'App\Http\Controllers\ProveedorController@baja');
+	Route::get('/opciones/proveedores/alta/{id}', 'App\Http\Controllers\ProveedorController@alta');
 
 	Route::get('gestión-comercial', function () {
 		return view('gestion-comercial.index');
 	});
 
-	
+
 	//Pantalla de productos
 	Route::get('/gestión-comercial/productos/obtener-productos', 'App\Http\Controllers\ProductoController@getProductos');
 	Route::get('/gestión-comercial/productos/producto-detalle/{tipo}/{id}', 'App\Http\Controllers\ProductoController@getDetallesProducto');
@@ -116,6 +117,20 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/gestión-comercial/ventas/baja/{id}', 'App\Http\Controllers\VentaController@baja');
 	Route::get('/gestión-comercial/ventas/alta/{id}', 'App\Http\Controllers\VentaController@alta');
 	Route::resource('/gestión-comercial/ventas', 'App\Http\Controllers\VentaController');
+
+	//Pantalla compras
+	Route::resource('/gestión-comercial/compras', 'App\Http\Controllers\CompraController');
+	Route::get('/g-comercial/compras/obtenerCodigo-compras', 'App\Http\Controllers\CompraController@getIdCompra');
+	Route::get('/g-comercial/compras/obtenerProductos/{query?}', 'App\Http\Controllers\CompraController@getProductos');
+	Route::get('/g-comercial/compras/obtenerProveedores/{query?}', 'App\Http\Controllers\CompraController@getProveedores');
+	Route::get('/g-comercial/compras/bajaCompra/{id}', 'App\Http\Controllers\CompraController@bajaCompra');
+	Route::get('/compras/obtener', 'App\Http\Controllers\CompraController@obtenerCompras');
+	Route::get('/g-comercial/compras/altaCompra/{id}', 'App\Http\Controllers\CompraController@altaCompra');
+	Route::get('/compras/{id}', 'App\Http\Controllers\CompraController@show');
+	Route::get('/compras/obtenerMonto', 'App\Http\Controllers\CompraController@obtenerComprasMonto');
+	Route::get('/g-comercial/compras/reporte', 'App\Http\Controllers\CompraController@generarPDF');
+	Route::get('/sucursales-obtener', 'App\Http\Controllers\CompraController@getSucursalC');
+
 
 	Route::get('billing', function () {
 
@@ -167,4 +182,3 @@ Route::get('login', function () {
 	return view('usuarios.login');
 })->name('login')->middleware('guest');
 Route::post('/login', 'App\Http\Controllers\LoginController@login');
-

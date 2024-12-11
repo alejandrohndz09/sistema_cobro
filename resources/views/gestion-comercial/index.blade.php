@@ -65,7 +65,8 @@
                         <div class="card card-link">
                             <a href="/gestión-comercial/inventario" class="stretched-link"></a>
                             <div class="card-header mx-4 p-3 d-flex justify-content-center">
-                                <div class="icon icon-shape icon-lg bg-gradient-warning shadow text-center d-flex justify-content-center align-items-center border-radius-lg">
+                                <div
+                                    class="icon icon-shape icon-lg bg-gradient-warning shadow text-center d-flex justify-content-center align-items-center border-radius-lg">
                                     <svg width="25px" height="25px" viewBox="0 0 42 42" version="1.1"
                                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                         <title>box-3d-50</title>
@@ -95,6 +96,22 @@
                                 <hr class="horizontal dark my-1">
                                 <i class="fas fa-circle-info text-xs"></i>
                                 <span class="text-xs">Gestión detallada de la entrada y salida de los productos.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 mb-xl-0 mb-4">
+                        <div class="card card-link">
+                            <a href="/gestión-comercial/compras" class="stretched-link"></a>
+                            <div class="card-header mx-4 p-3 text-center">
+                                <div  class="icon icon-shape icon-lg bg-gradient-success shadow text-center border-radius-lg">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                </div>
+                            </div>
+                            <div class="card-body pt-0 p-3 text-center">
+                                <h4 class="text-center mb-0">Compras</h4>
+                                <hr class="horizontal dark my-1">
+                                <i class="fas fa-circle-info text-xs"></i>
+                                <span class="text-xs">Gestión de compras.</span>
                             </div>
                         </div>
                     </div>
