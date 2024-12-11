@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-fluid ">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-9">
                 <div class="col-md-12 mb-lg-0 mb-4">
                     <div class="card">
                         <div class="card-header pb-0 p-3">
@@ -134,7 +134,15 @@
                     </div>
                 </div>
             </div>
-
+            <div class="col-lg-3">
+                <div class="row mx-1">
+                    <a href="{{ url('/gestión-comercial/productos/proveedores') }}"
+                        class="btn bg-white text text-transform-none border-radius-lg">
+                        <i class="fas fa-building me-2"></i>
+                        <span style="text-transform: none">Gestión de proveedores</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     @include('gestion-comercial.productos.modales')

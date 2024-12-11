@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-3 mb-4">
+                    {{-- <div class="col-md-6 col-sm-3 mb-4">
                         <div class="card card-link">
                             <a href="/opciones/otros" class="stretched-link"></a>
                             <div class="card-header mx-4 p-3 text-center">
@@ -76,7 +76,7 @@
                             </div>
                         </div>
                     </div>
-                    
+                     --}}
                 </div>
             </div>
         </div>
