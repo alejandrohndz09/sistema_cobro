@@ -492,7 +492,7 @@ function mostrarDatos() {
                     </td>
                     <td class="px-1">
                         <p class="text-xs font-weight-bold mb-0">
-                            $${a.bienes.reduce((total, b) => total + parseFloat(b.precio), 0).toFixed(2)}
+                            $${(a.valorAcumulado).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </p>
                     </td>
                     <td class="px-1 text-xs">
@@ -522,44 +522,53 @@ function mostrarDatos() {
                 Edificación: '.card-edificaciones h5',
                 Maquinaria: '.card-maquinaria h5',
                 Vehiculo: '.card-vehiculos h5',
-                'Otros bienes muebles': '.card-otros-bienes h5'
+                'Otros bienes': '.card-otros-bienes h5'
             };
 
             Object.keys(categorias).forEach(categoria => {
                 const selector = categorias[categoria];
-                const total = resultados.find(r => r.categoria_agrupada === categoria)?.total || 0;
-                // Usa toLocaleString para formatear con comas
-                $(selector).text(`$${parseFloat(total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+                
+                // Buscar el resultado de la categoría
+                const categoriaData = resultados.find(r => r.nombre === categoria);
+    
+                if (categoriaData) {
+                    const total = categoriaData.valorAcumulado || 0;
+                    // Formatea el valor como moneda con 2 decimales
+                    $(selector).text(`$${parseFloat(total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+                } else {
+                    // Si no se encuentra la categoría, asigna 0
+                    $(selector).text('$0.00');
+                }
             });
 
-            const sucursales = data.datosSucursales; // Obtén los datos de sucursales del controlador
+            // const sucursales = data.datosSucursales; // Obtén los datos de sucursales del controlador
 
-            const listGroup = $('.list-group'); // Seleccionar la lista donde se colocarán las sucursales
-            listGroup.empty(); // Limpiar el contenido actual de la lista
+            // const listGroup = $('.list-group'); // Seleccionar la lista donde se colocarán las sucursales
+            // listGroup.empty(); // Limpiar el contenido actual de la lista
 
-            sucursales.forEach(resultado => {
-                // Crear el contenido de cada elemento de la lista
-                const listItem = `
-                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                        <div class="d-flex align-items-center">
-                            <button
-                                class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </button>
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-1 text-dark font-weight-bold text-sm">${resultado.nombre}</h6>
-                                <span class="text-xs">Valor distribuido:</span>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center text-sm font-weight-bold">
-                            $${parseFloat(resultado.total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </div>
-                    </li>
-                `;
+            // sucursales.forEach(resultado => {
+            //     // Crear el contenido de cada elemento de la lista
+            //     const listItem = `
+            //         <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+            //             <div class="d-flex align-items-center">
+            //                 <button
+            //                     class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
+            //                     <i class="fas fa-map-marker-alt"></i>
+            //                 </button>
+            //                 <div class="d-flex flex-column">
+            //                     <h6 class="mb-1 text-dark font-weight-bold text-sm">${resultado.nombre}</h6>
+            //                     <span class="text-xs">Valor distribuido:</span>
+            //                 </div>
+            //             </div>
+            //             <div class="d-flex align-items-center text-sm font-weight-bold">
+            //                 $${parseFloat(resultado.total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            //             </div>
+            //         </li>
+            //     `;
 
-                // Añadir el elemento a la lista
-                listGroup.append(listItem);
-            });
+            //     // Añadir el elemento a la lista
+            //     listGroup.append(listItem);
+            // });
 
         },
         error: function (xhr, status, error) {

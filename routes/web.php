@@ -99,10 +99,14 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/productos/alta/{id}', 'App\Http\Controllers\ProductoController@alta');
 
 	//Pantalla de Proveedor
-	Route::resource('/opciones/proveedores', 'App\Http\Controllers\ProveedorController');
+// 	Route::resource('/opciones/proveedores', 'App\Http\Controllers\ProveedorController');
+// 	Route::get('/obtener-proveedores', 'App\Http\Controllers\ProveedorController@getProveedores');
+//   Route::get('/opciones/proveedores/baja/{id}', 'App\Http\Controllers\ProveedorController@baja');
+//   Route::get('/opciones/proveedores/alta/{id}', 'App\Http\Controllers\ProveedorController@alta');
+Route::resource('/gestión-comercial/productos/proveedores', 'App\Http\Controllers\ProveedorController');
 	Route::get('/obtener-proveedores', 'App\Http\Controllers\ProveedorController@getProveedores');
-  Route::get('/opciones/proveedores/baja/{id}', 'App\Http\Controllers\ProveedorController@baja');
-  Route::get('/opciones/proveedores/alta/{id}', 'App\Http\Controllers\ProveedorController@alta');
+  Route::get('/gestión-comercial/productos/proveedores/baja/{id}', 'App\Http\Controllers\ProveedorController@baja');
+  Route::get('/gestión-comercial/productos/proveedores/alta/{id}', 'App\Http\Controllers\ProveedorController@alta');
 
 
 	Route::get('gestión-comercial', function () {
@@ -138,10 +142,10 @@ Route::group(['middleware' => 'auth'], function () {
   Route::post('/gestión-comercial/cuotas/{idCuota}/actualizar-fecha', 'App\Http\Controllers\CuotaController@actualizarFecha');
   Route::get('/gestión-comercial/cuotas/actualizar-estados', 'App\Http\Controllers\CuotaController@actualizarEstadoCuotas');
 
-	Route::resource('/clientes', 'App\Http\Controllers\ClienteController');
+	Route::resource('/gestión-comercial/clientes', 'App\Http\Controllers\ClienteController');
 	Route::get('/obtener-listaclientes/{tipoCliente}/{tipoClasificacion}', 'App\Http\Controllers\ClienteController@obtenerClientes');
-	Route::get('/clientes/baja/{id}', 'App\Http\Controllers\ClienteController@baja');
-	Route::get('clientes/alta/{id}', 'App\Http\Controllers\ClienteController@alta');
+	Route::get('/gestión-comercial/clientes/baja/{id}', 'App\Http\Controllers\ClienteController@baja');
+	Route::get('/gestión-comercial/clientes/alta/{id}', 'App\Http\Controllers\ClienteController@alta');
 
 
 	Route::get('billing', function () {
