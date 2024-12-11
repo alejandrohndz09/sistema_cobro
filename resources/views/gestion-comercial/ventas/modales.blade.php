@@ -31,14 +31,14 @@
                                     <label>Tipo de Venta: *</label>
                                     <div class="input-group mb-1">
                                         <select name="tipo" id="tipo" class="form-control">
-                                            <option selected ="Contado">Contado</option>
+                                            <option selected value="Contado">Contado</option>
                                             <option value="Crédito">Crédito</option>
                                         </select>
                                     </div>
                                     <span id="error-tipo" class="text-danger text-xs mb-3"></span>
                                 </div>
                             </div>
-                            {{-- <div class="row mb-3 align-items-center detalles-prod">
+                            <div class="row mb-3 align-items-center detalles-credito" style="display: none">
                                 <div class="col-6">
                                     <label>Plazo (meses): *</label>
                                     <div class="input-group mb-1">
@@ -48,11 +48,8 @@
                                     <span id="error-plazo" class="text-danger text-xs mb-3"></span>
                                 </div>
 
-                                <div class="col-6">
-                                    <label>Cuota:</label>
-                                    <h6 class="text-xl text-dark mb-0 ms-1" id="cuota">$0.00</h6>
-                                </div>
-                            </div> --}}
+                              
+                            </div>
                             <div class="row align-items-start mb-3 ">
                                 <!-- Elección del Producto -->
                                 <div class="drop-relative col-xl-6">
@@ -141,12 +138,15 @@
                                             <p class="text-sm text-dark mb-1 ms-1" id="total">$0.00</p>
                                         </div>
                                         <div class="d-flex justify-content-end mb-0">
-                                            <label class="text-sm">Iva (14%):</label>
+                                            <label class="text-sm">IVA (13%):</label>
                                             <p class="text-sm text-dark mb-1 ms-1" id="iva">$0.00</p>
                                         </div>
                                         <div class="d-flex justify-content-end mb-0">
                                             <label class="text-lg">Total a pagar:</label>
                                             <p class="text-lg text-dark mb-1 ms-1" id="totalVenta">$0.00</p>
+                                        </div>
+                                        <div class="d-flex justify-content-end mb-0">
+                                            <h6 class="text-xxs text-dark mb-0 ms-1" id="cuota">Será pagado en n cuotas mensuales con un valor de $0.00</h6>
                                         </div>
                                     </div>
                                 </div>

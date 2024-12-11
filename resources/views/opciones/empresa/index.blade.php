@@ -117,7 +117,7 @@
                                     </thead>
                                     <tbody id="tableBody">
                                         @foreach ($sucursales as $sucursal)
-                                            <tr>
+                                            <tr class="tr-link" data-id="{{ $sucursal->idSucursal }}">
                                                 <td style="width: 9%">
                                                     <div
                                                         class="avatar avatar-sm icon bg-gradient-info shadow text-center border-radius-lg">

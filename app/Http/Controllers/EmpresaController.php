@@ -71,7 +71,7 @@ class EmpresaController extends Controller
         // Validación para Empresa
         $request->validate([
             'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'nit' => 'required|regex:/^[0-9]{14}$/',
+            'nit' => 'required|regex:/^\d{4}-\d{6}-\d{3}-\d{1}$/|min:14',
             'nombre' => 'required|string|min:3|max:100',
         ]);
 
@@ -93,9 +93,10 @@ class EmpresaController extends Controller
             // Procesar y guardar la nueva imagen
             $file = $request->file('logo');
             $filename = time() . '_' . $file->getClientOriginalName(); // Genera un nombre único
-            $filePath = 'assets/img/empresas/' . $filename;
+            $filenameFormat = str_replace(' ', '_',$filename);
+            $filePath = 'assets/img/empresas/' . $filenameFormat;
 
-            $file->move(public_path('assets/img/empresas'), $filename);
+            $file->move(public_path('assets/img/empresas'), $filenameFormat);
             $empresa->logo = $filePath; // Guarda la nueva ruta en la base de datos
         }
 

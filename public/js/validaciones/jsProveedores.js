@@ -114,13 +114,13 @@ function agregar() {
     $('#estado').val(1);
 
     $('#method').val('POST');
-    $('#proveedorForm').attr('action', '/opciones/proveedores');
+    $('#proveedorForm').attr('action', '');
     $('#modalForm').modal('show');
 }
 
 // Función para editar un proveedor
 function editar(IdProveedor) {
-    $.get('/opciones/proveedores/' + IdProveedor + '/edit', function (obj) {
+    $.get('/gestión-comercial/productos/proveedores/' + IdProveedor + '/edit', function (obj) {
         // Limpiar errores anteriores
         const errorSpans = document.querySelectorAll('span.text-danger');
         errorSpans.forEach(function (span) {
@@ -135,21 +135,21 @@ function editar(IdProveedor) {
         $('#estado').val(obj.estado);
 
         $('#method').val('PUT');
-        $('#proveedorForm').attr('action', '/opciones/proveedores/' + IdProveedor);
+        $('#proveedorForm').attr('action', '/gestión-comercial/productos/proveedores/' + IdProveedor);
         $('#modalForm').modal('show');
     });
 }
 
 // Función para eliminar un proveedor
 function eliminar(IdProveedor) {
-    $('#confirmarForm').attr('action', '/opciones/proveedores/' + IdProveedor);
+    $('#confirmarForm').attr('action', '/gestión-comercial/productos/proveedores/' + IdProveedor);
     $('#methodC').val('DELETE');
     $('#dialogo').text('Está a punto de eliminar permanentemente el registro. ¿Desea continuar?');
 }
 
 // Función para deshabilitar un proveedor
 function baja(IdProveedor) {
-    $('#confirmarForm').attr('action', '/opciones/proveedores/baja/' + IdProveedor);
+    $('#confirmarForm').attr('action', '/gestión-comercial/productos/proveedores/baja/' + IdProveedor);
     $('#methodC').val('GET');
     $('#dialogo').text('Está a punto de deshabilitar el registro. ¿Desea continuar?');
 }
@@ -157,7 +157,7 @@ function baja(IdProveedor) {
 // Función para habilitar un proveedor
 function alta(IdProveedor) {
     $.ajax({
-        url: '/opciones/proveedores/alta/' + IdProveedor,
+        url: '/gestión-comercial/productos/proveedores/alta/' + IdProveedor,
         method: 'get',
         success: function (response) {
             Toast.fire({

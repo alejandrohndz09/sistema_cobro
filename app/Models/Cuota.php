@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Cuotum
- * 
+ *
  * @property string $idCuota
  * @property Carbon $fechaLimite
  * @property Carbon $fechaPago
@@ -19,37 +19,38 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $mora
  * @property int $estado
  * @property string|null $idVenta
- * 
+ *
  * @property Venta|null $venta
  *
  * @package App\Models
  */
-class Cuotum extends Model
+class Cuota extends Model
 {
-	protected $table = 'cuota';
-	protected $primaryKey = 'idCuota';
-	public $incrementing = false;
-	public $timestamps = false;
+    protected $table = 'cuota';
+    protected $primaryKey = 'idCuota';
+    public $incrementing = false;
+    public $timestamps = false;
 
-	protected $casts = [
-		'fechaLimite' => 'datetime',
-		'fechaPago' => 'datetime',
-		'monto' => 'float',
-		'mora' => 'float',
-		'estado' => 'int'
-	];
+    protected $casts = [
+        'fechaLimite' => 'datetime',
+        'fechaPago' => 'datetime',
+        'monto' => 'float',
+        'mora' => 'float',
+        'estado' => 'int'
+    ];
 
-	protected $fillable = [
-		'fechaLimite',
-		'fechaPago',
-		'monto',
-		'mora',
-		'estado',
-		'idVenta'
-	];
+    protected $fillable = [
+        'idCuota', // Inclúyelo aquí para que pueda ser asignado
+        'fechaLimite',
+        'fechaPago',
+        'monto',
+        'mora',
+        'estado',
+        'idVenta'
+    ];
 
-	public function venta()
-	{
-		return $this->belongsTo(Venta::class, 'idVenta');
-	}
+    public function venta()
+    {
+        return $this->belongsTo(Venta::class, 'idVenta');
+    }
 }

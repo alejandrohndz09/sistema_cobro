@@ -197,6 +197,7 @@ function alta(idProducto) {
         }
     });
 }
+
 function mostrarDatos() {
     $.ajax({
         url: '/gestión-comercial/productos/obtener-productos',
@@ -244,6 +245,8 @@ function mostrarDatos() {
 
                 // Crear la fila de la tabla
                 const tr = document.createElement('tr');
+                tr.setAttribute('data-id', c.idProducto);
+                tr.classList.add('tr-link'); // Clase de la fila<<
                 tr.innerHTML = `
                         <td>
                             ${imagen}
@@ -317,15 +320,14 @@ $('#imagen').on('change', function (event) {
 $('.producto-row').on('click', function (event) {
 
     const producto = $(this).data('producto'); // Aquí se recupera el objeto $registro
-
     let id, tipo;
 
     // Verificar si el ID contiene 'DC' (detalle compra) o 'DV' (detalle venta)
-    if (producto.idDetalle.startsWith('DC')) {
-        id = producto.idDetalle;
+    if (producto.idDetalleCompra.startsWith('DC')) {
+        id = producto.idDetalleCompra;
         tipo = 'entrada'; // Es una compra
-    } else if (producto.idDetalle.startsWith('DV')) {
-        id = producto.idDetalle;
+    } else if (producto.idDetalleCompra.startsWith('DV')) {
+        id = producto.idDetalleCompra;
         tipo = 'salida'; // Es una venta
     }
 

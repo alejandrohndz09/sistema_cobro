@@ -10,9 +10,10 @@
     <div class="container-fluid ">
         <div class="row">
             <div class="col-lg-9">
-                <div class="row ">
+                <div class="row">
+                    <!-- Columna de Edificaciones -->
                     <div class="col-md-3 col-sm-3 mb-4">
-                        <div class="card">
+                        <div class="card card-edificaciones">
                             <div class="card-header mx-4 p-3 text-center">
                                 <div class="icon icon-shape icon-lg bg-gradient-dark shadow text-center border-radius-lg">
                                     <i class="fas fa-building opacity-10"></i>
@@ -22,12 +23,17 @@
                                 <h6 class="text-center mb-0">Edificaciones</h6>
                                 <span class="text-xs">Valor estimado:</span>
                                 <hr class="horizontal dark my-1">
-                                <h5 class="mb-0">+$2000</h5>
+                                <h5 class="mb-0">
+
+                                    ${{ number_format($resultados[0]['valorAcumulado'], 2, '.', ',') }}
+                                </h5>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Columna de Maquinaria -->
                     <div class="col-md-3 col-sm-3 mb-4">
-                        <div class="card">
+                        <div class="card card-maquinaria">
                             <div class="card-header mx-4 p-3 text-center">
                                 <div class="icon icon-shape icon-lg bg-gradient-info shadow text-center border-radius-lg">
                                     <i class="fas fa-snowplow opacity-10"></i>
@@ -37,12 +43,17 @@
                                 <h6 class="text-center mb-0">Maquinaria</h6>
                                 <span class="text-xs">Valor estimado:</span>
                                 <hr class="horizontal dark my-1">
-                                <h5 class="mb-0">+$2000</h5>
+                                <h5 class="mb-0">
+                                    ${{ number_format($resultados[1]['valorAcumulado'], 2, '.', ',') }}
+
+                                </h5>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Columna de Vehículos -->
                     <div class="col-md-3 col-sm-3 mb-4">
-                        <div class="card">
+                        <div class="card card-vehiculos">
                             <div class="card-header mx-4 p-3 text-center">
                                 <div
                                     class="icon icon-shape icon-lg bg-gradient-warning shadow text-center border-radius-lg">
@@ -53,27 +64,36 @@
                                 <h6 class="text-center mb-0">Vehículos</h6>
                                 <span class="text-xs">Valor estimado:</span>
                                 <hr class="horizontal dark my-1">
-                                <h5 class="mb-0">+$2000</h5>
+                                <h5 class="mb-0">
+                                    ${{ number_format($resultados[2]['valorAcumulado'], 2, '.', ',') }}
+
+                                </h5>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Columna de Otros Bienes -->
                     <div class="col-md-3 col-sm-3 mb-4">
-                        <div class="card">
+                        <div class="card card-otros-bienes">
                             <div class="card-header mx-4 p-3 text-center">
                                 <div
                                     class="icon icon-shape icon-lg bg-gradient-success shadow text-center border-radius-lg">
-                                    <i class="fas fa-computer opacity-10"></i>
+                                    <i class="fas fa-box opacity-10"></i>
                                 </div>
                             </div>
                             <div class="card-body pt-0 p-3 text-center">
-                                <h6 class="text-center mb-0">Otros bienes</h6>
+                                <h6 class="text-center mb-0">Otros Bienes</h6>
                                 <span class="text-xs">Valor estimado:</span>
                                 <hr class="horizontal dark my-1">
-                                <h5 class="mb-0">$455.00</h5>
+                                <h5 class="mb-0">
+                                    ${{ number_format($resultados[3]['valorAcumulado'], 2, '.', ',') }}
+
+                                </h5>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 <div class="col-md-12 mb-lg-0 mb-4">
                     <div class="card">
@@ -159,7 +179,7 @@
                                                 </td>
                                                 <td class="px-1">
                                                     <p class="text-xs font-weight-bold mb-0">
-                                                        {{ '$' . number_format($a->bienes->sum('precio'), 2, '.', ',') }}
+                                                        {{ '$' . number_format($a->obtenerValorAcumulado(), 2, '.', ',') }}
                                                     </p>
                                                 </td>
                                                 <td class="px-1 text-xs">
@@ -254,63 +274,37 @@
                         </li>
                     </ul>
                 </div>
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header pb-0 p-3">
                         <div class="row d-flex align-items-center">
-
                             <h6 class="mb-0">Activos por Sucursal</h6>
-
                         </div>
                     </div>
                     <div class="card-body p-3 pb-0">
                         <ul class="list-group">
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-
-                                <div class="d-flex align-items-center">
-                                    <button
-                                        class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-map-marker-alt"></i></button>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark font-weight-bold text-sm">San Vicente</h6>
-                                        <span class="text-xs">Valor distribuido:</span>
+                            @foreach ($datosSucursales as $resultado)
+                                <li
+                                    class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                    <div class="d-flex align-items-center">
+                                        <button
+                                            class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </button>
+                                        <div class="d-flex flex-column">
+                                            <h6 class="mb-1 text-dark font-weight-bold text-sm">{{ $resultado->nombre }}
+                                            </h6>
+                                            <span class="text-xs">Valor distribuido:</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex align-items-center text-sm font-weight-bold">
-                                    $ 2,000
-                                </div>
-                            </li>
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-
-                                <div class="d-flex align-items-center">
-                                    <button
-                                        class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-map-marker-alt"></i></button>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark font-weight-bold text-sm">San Salvador</h6>
-                                        <span class="text-xs">Valor distribuido:</span>
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+                                        $ {{ number_format($resultado->total, 2) }}
                                     </div>
-                                </div>
-                                <div class="d-flex align-items-center text-sm font-weight-bold">
-                                    $ 2,000
-                                </div>
-                            </li>
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                                <div class="d-flex align-items-center">
-                                    <button
-                                        class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-map-marker-alt"></i></button>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark font-weight-bold text-sm">Santa Ana</h6>
-                                        <span class="text-xs">Valor distribuido:</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center text-sm font-weight-bold">
-                                    $ 2,000
-                                </div>
-                            </li>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
-                </div>
+                </div> --}}
+
             </div>
         </div>
     </div>

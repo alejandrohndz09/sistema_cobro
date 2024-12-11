@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Departamento;
+use App\Models\Empresa;
 use App\Models\Sucursal;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DepartamentoController extends Controller
 {
@@ -14,12 +16,11 @@ class DepartamentoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $departamentos = Departamento::all();
+    public function index() {
+        $empresas = Empresa::all();
         $sucursales = Sucursal::all();
 
-        return view('opciones.empresa.departamento.index', compact('departamentos', 'sucursales'));
+        return view('opciones.empresa.index', compact('empresas', 'sucursales'));
     }
 
 
@@ -43,11 +44,10 @@ class DepartamentoController extends Controller
     {
         // Validar la solicitud
         $request->validate([
-            'idSucursal' => 'required',
             'nombre' => 'required|min:3|unique:departamento'
 
         ], [
-            'nombre.unique' => 'Esta categoría ya ha sido ingresada.',
+            'nombre.unique' => 'Esta departamento ya ha sido ingresado.',
         ]);
 
         $departamento = new Departamento();
@@ -72,7 +72,14 @@ class DepartamentoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {}
+    public function show($id)
+    {
+        $sucursal = Sucursal::find($id);
+        $departamentos = $sucursal->departamentos;
+
+        // Retornar la vista con los datos separados
+        return view('opciones.empresa.departamentos.index', compact('sucursal', 'departamentos'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -127,21 +134,41 @@ class DepartamentoController extends Controller
     public function destroy($id)
     {
         $departamento = Departamento::find($id);
-        if ($departamento->activos === 0) {
-            $departamento->delete();
-            $alert = array(
-                'type' => 'success',
-                'message' => 'El registro se ha eliminado exitosamente'
-            );
-        } else {
-            $alert = array(
+
+        // Verificar si el departamento tiene relaciones con la tabla 'venta'
+        $relacionVenta = DB::table('venta')
+            ->where('idEmpleado', $departamento->idEmpleado) // Asegúrate de usar el campo correcto para la relación
+            ->exists(); // Verifica si hay registros relacionados
+
+        if ($relacionVenta) {
+            return response()->json([
                 'type' => 'error',
-                'message' => 'No se puede eliminar el registro porque tiene datos asociados'
-            );
+                'message' => 'No se puede eliminar el departamento porque tiene registros relacionados en la tabla Venta.'
+            ]);
         }
 
-        return response()->json($alert);
+        // Verificar si el departamento tiene registros en la tabla 'bien' o 'empleado'
+        $relacionBien = DB::table('bien')->where('idDepartamento', $departamento->idDepartamento)->exists();
+        $relacionEmpleado = DB::table('empleado')->where('idDepartamento', $departamento->idDepartamento)->exists();
+
+        // Si el departamento tiene registros relacionados, no permitir la eliminación
+        if ($relacionBien || $relacionEmpleado) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'El departamento no puede ser eliminado porque tiene registros relacionados en Bien o Empleado.'
+            ]);
+        }
+
+        // Si no tiene relaciones, proceder con la eliminación
+        $departamento->delete();
+
+        return response()->json([
+            'type' => 'success',
+            'message' => 'El departamento ha sido eliminado exitosamente.'
+        ]);
     }
+
+
 
     public function baja($id)
     {
@@ -191,9 +218,11 @@ class DepartamentoController extends Controller
         return $nuevoId;
     }
 
-    public function getDepartamentos()
+    public function getDepartamentos($id)
     {
-        $departamentos = Departamento::all(); // Ajusta esto según tus necesidades
+        // Obtener departamentos relacionados con la sucursal especificada
+        $departamentos = Departamento::where('idSucursal', $id)->get();
+
         return response()->json($departamentos);
     }
 }
