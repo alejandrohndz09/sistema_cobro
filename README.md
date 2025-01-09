@@ -1,54 +1,53 @@
-# Sistema de Gestión Financiera
+# Sistema de Cobro
 
-## Descripción General
-Este sistema financiero está diseñado para optimizar la gestión de cuentas por cobrar, inventarios, facturación y activos fijos. Incluye funcionalidades específicas para instituciones comerciales. Está estructurado en cuatro módulos principales, cada uno con características específicas para cubrir las necesidades del negocio.
+## Descripción
+El **Sistema de Cobro** es una aplicación web diseñada para facilitar la gestión integral de ventas y cobros, así como la administración de activos fijos dentro de una organización. Su enfoque modular permite manejar de manera eficiente tanto las operaciones comerciales como los recursos físicos de la empresa, promoviendo la automatización, el control de pagos a crédito y la supervisión de bienes.
 
----
+## Módulos Funcionales
 
-## Módulos del Sistema
+### 1. Gestión Comercial
+Este módulo permite administrar las transacciones comerciales, los clientes, y el proceso de cobro.
 
-### 1. **Cuentas por Cobrar - Instituciones Comerciales**
-Este módulo maneja cuentas por cobrar para instituciones comerciales, vinculando los créditos con el inventario y las políticas de cobro.
+#### Funcionalidades Clave
+- **Gestión de Ventas**:  
+  - Creación de ventas con opción de pago a crédito o contado.  
+  - Generación de facturas en PDF para ventas realizadas.  
+  - Actualización automática de inventarios.
 
-- **Características:**
-  - Creación de usuarios con niveles de acceso.
-  - Generación de un catálogo de clientes con datos generales.
-  - Definición de tasas de interés por tipo de producto o crédito.
-  - Clasificación de clientes en categorías como morosos e incobrables.
-  - Diseño de recibos con detalles de intereses, comisiones, abonos y saldos.
-  - Reactivación de créditos incobrables con recalculación de condiciones.
-  - Vinculación con el módulo de inventario para créditos relacionados con productos.
+- **Gestión de Cuotas**:  
+  - Creación automática de cuotas basadas en condiciones de crédito.  
+  - Cálculo de mora por pagos atrasados y actualización de estados de cuotas.  
+  - Reportes detallados de pagos.
 
----
+- **Gestión de Clientes**:  
+  - Administración de clientes naturales y jurídicos.  
+  - Validaciones específicas para documentos de identidad y registros fiscales.  
+  - Almacenamiento de documentos en formato PDF.
 
-### 2. **Inventario**
-Este módulo permite gestionar y controlar los niveles de inventario, asegurando que los productos estén disponibles y registrados correctamente.
+#### Beneficios
+- Mejora la eficiencia del proceso de ventas y cobros.
+- Automatiza la creación de cuotas y el cálculo de intereses por mora.
+- Centraliza la información de clientes y transacciones comerciales.
 
-- **Características:**
-  - Clasificación de productos por categoría.
-  - Métodos de registro conforme al código tributario.
-  - Sistema de control de stock con alertas para niveles mínimos.
-  - Vinculación con el módulo de cuentas por cobrar y facturación.
+### 2. Gestión de Activo Fijo
+Este módulo proporciona herramientas para el control y seguimiento de los activos físicos de la organización.
 
----
+#### Funcionalidades Clave
+- Registro y categorización de activos fijos.
+- Asociación de activos con empresas y sucursales.
+- Reportes sobre activos disponibles y su ubicación.
 
-### 3. **Facturación**
-El módulo de facturación garantiza que todas las transacciones de venta se registren y cumplan con las normativas legales.
+#### Beneficios
+- Facilita el inventario y la supervisión de activos.
+- Proporciona una estructura escalable para manejar recursos físicos.
 
-- **Características:**
-  - Diseño de facturas cumpliendo con normativas locales.
-  - Inclusión de datos obligatorios como detalles de venta, IVA y tipo de pago.
-  - Registro de ventas al contado y al crédito, con vinculación automática a cuentas por cobrar.
-  - Manejo de diferentes tipos de facturas: consumidor final, crédito fiscal, notas de crédito y débito.
+## Tecnologías Utilizadas
+- **Backend**: Laravel 11
+- **Lenguaje de Programación**: PHP 8.1
+- **Frontend**: Bootstrap 5, Blade Templates
+- **Base de Datos**: MySQL
+- **Generación de PDF**: DomPDF
+- **Gestión de Dependencias**: Composer
 
----
-
-### 4. **Activo Fijo**
-El módulo de activo fijo asegura el control y la depreciación adecuada de los bienes de la empresa.
-
-- **Características:**
-  - Catálogo de códigos para identificar activos.
-  - Registro de características como marca, modelo y fecha de compra.
-  - Cálculo de depreciación anual, mensual y diaria según la legislación local.
-  - Registro de bajas de activos y motivos.
-  - Generación de reportes para auditorías fiscales.
+## Propósito
+El Sistema de Cobro busca automatizar los procesos de ventas, cobro y gestión de activos, proporcionando a las empresas herramientas efectivas para mejorar la eficiencia operativa, reducir errores y centralizar la administración de recursos críticos.
